@@ -185,6 +185,11 @@ footer.bottom code { background: var(--paper-2); padding: 2px 6px; font-family: 
 .kpi:nth-child(1) { animation-delay: 0.05s; } .kpi:nth-child(2) { animation-delay: 0.1s; }
 .kpi:nth-child(3) { animation-delay: 0.15s; } .kpi:nth-child(4) { animation-delay: 0.2s; }
 .kpi:nth-child(5) { animation-delay: 0.25s; }
+
+.course-filter { display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-right: var(--border-thin); }
+.course-filter label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray-2); font-weight: 600; white-space: nowrap; }
+.course-filter select { border: 1px solid var(--ink); background: var(--paper); padding: 6px 8px; font-family: 'Manrope'; font-size: 12px; cursor: pointer; max-width: 240px; }
+
 </style>
 </head><body>
 <div class="shell">
@@ -278,6 +283,10 @@ footer.bottom code { background: var(--paper-2); padding: 2px 6px; font-family: 
         <button class="filter-btn" data-status="new">Новые <span class="pill" id="cnt-new">0</span></button>
         <button class="filter-btn" data-status="lost">Не вернулись <span class="pill" id="cnt-lost">0</span></button>
       </div>
+      <div class="course-filter">
+        <label for="course-select">Курс:</label>
+        <select id="course-select"><option value="">— все —</option></select>
+      </div>
       <div class="filter-group">
         <input type="text" class="search-input" id="search" placeholder="Поиск по имени...">
       </div>
@@ -352,7 +361,7 @@ const DIMINUTIVES = {
   'федя':'федор','ярик':'ярослав','мотя':'матвей','мирик':'мирослав','арс':'арсений',
 };
 
-let STATE = { data: EMBEDDED_DATA, view: '2026', sortKey: 'amount26', sortDir: 'desc', statusFilter: 'all', search: '', drawerKey: null, drawerList: [] };
+let STATE = { data: EMBEDDED_DATA, view: '2026', sortKey: 'amount26', sortDir: 'desc', statusFilter: 'all', search: '', courseFilter: '', drawerKey: null, drawerList: [] };
 
 const fmt = (n, d=0) => n.toLocaleString('ru-RU', {minimumFractionDigits: d, maximumFractionDigits: d});
 const fmtDate = (s) => { const d = new Date(s); return ('0'+d.getDate()).slice(-2) + '.' + ('0'+(d.getMonth()+1)).slice(-2) + '.' + d.getFullYear(); };
@@ -420,28 +429,42 @@ function clientStatus(key, agg25, agg26) {
 function buildClientsTable(agg25, agg26) {
   const all = new Set([...agg25.byClient.keys(), ...agg26.byClient.keys()]);
   const rows = [];
+  const courseFilter = STATE.courseFilter;
   all.forEach(key => {
     const status = clientStatus(key, agg25, agg26);
     const c25 = agg25.byClient.get(key);
     const c26 = agg26.byClient.get(key);
     const useC = c26 || c25;
-    const dates25 = c25 ? c25.payments.map(p => p.date) : [];
-    const dates26 = c26 ? c26.payments.map(p => p.date) : [];
-    const firstSeen = [...dates25, ...dates26].sort()[0];
-    const refC = c26 || c25;
+    // если фильтр по курсу — оставляем только платежи этого курса
+    const filterPays = (c) => {
+      if (!c) return null;
+      if (!courseFilter) return c;
+      const filtered = c.payments.filter(p => (p.course || '') === courseFilter);
+      if (!filtered.length) return null;
+      return { ...c, payments: filtered, totalAmount: filtered.reduce((s,p) => s + p.amount, 0) };
+    };
+    const fc25 = filterPays(c25);
+    const fc26 = filterPays(c26);
+    // если активен фильтр курса и клиент не учится на этом курсе — пропускаем
+    if (courseFilter && !fc25 && !fc26) return;
+    const refC = fc26 || fc25 || useC;
+    const dates25 = fc25 ? fc25.payments.map(p => p.date) : [];
+    const dates26 = fc26 ? fc26.payments.map(p => p.date) : [];
+    const firstSeen = [...dates25, ...dates26].sort()[0] || ([...(c25?c25.payments.map(p=>p.date):[]), ...(c26?c26.payments.map(p=>p.date):[])].sort()[0]);
     const cashCount = {};
     refC.payments.forEach(p => { const t = getCashType(p.cashbox); cashCount[t] = (cashCount[t] || 0) + 1; });
     const cashTypes = Object.keys(cashCount);
     let cash;
     if (cashTypes.length === 1) cash = cashTypes[0];
+    else if (cashTypes.length === 0) cash = 'other';
     else { const max = Math.max(...Object.values(cashCount)); cash = cashTypes.find(t => cashCount[t] === max); if (cashTypes.length > 1) cash = 'mixed-' + cash; }
     rows.push({
       key, client: [...useC.originalNames].sort((a,b)=>b.length-a.length)[0],
-      amount25: c25 ? c25.totalAmount : 0, amount26: c26 ? c26.totalAmount : 0,
-      delta: (c26 ? c26.totalAmount : 0) - (c25 ? c25.totalAmount : 0),
-      payments25: c25 ? c25.payments.length : 0, payments26: c26 ? c26.payments.length : 0,
+      amount25: fc25 ? fc25.totalAmount : 0, amount26: fc26 ? fc26.totalAmount : 0,
+      delta: (fc26 ? fc26.totalAmount : 0) - (fc25 ? fc25.totalAmount : 0),
+      payments25: fc25 ? fc25.payments.length : 0, payments26: fc26 ? fc26.payments.length : 0,
       status, firstSeen, cash, cashCount,
-      _c25: c25, _c26: c26
+      _c25: fc25 || c25, _c26: fc26 || c26
     });
   });
   return rows;
@@ -575,15 +598,26 @@ function renderCourses(agg25, agg26) {
   const max = sorted[0] ? sorted[0].amount : 1;
   const total = sorted.reduce((s,r) => s+r.amount, 0) || 1;
   document.getElementById('courses-meta').textContent = sorted.length + ' курсов · ' + STATE.view + ' год';
-  document.getElementById('courses-body').innerHTML = '<div class="seg-list">' + sorted.map(r => {
+  const coursesBody = document.getElementById('courses-body');
+  coursesBody.innerHTML = '<div class="seg-list">' + sorted.map(r => {
     const pct = r.amount / max * 100;
-    return '<div class="seg-row" style="grid-template-columns: 240px 1fr 100px 100px;">' +
+    return '<div class="seg-row" data-course="' + r.name.replace(/"/g, '&quot;') + '" style="grid-template-columns: 240px 1fr 100px 100px; cursor: pointer;" title="Кликни → отфильтровать таблицу по этому курсу">' +
       '<div class="seg-name">' + r.name + '<div style="font-size:10px;color:var(--gray-2);font-family:JetBrains Mono;">' + r.clients.size + ' клиентов · ' + r.count + ' оплат</div></div>' +
       '<div class="seg-bar-wrap"><div class="seg-bar" style="width:' + pct + '%"></div></div>' +
       '<div class="seg-amt">' + fmt(r.amount, 0) + ' р</div>' +
       '<div class="seg-pct">' + (r.amount/total*100).toFixed(0) + '% выручки</div>' +
     '</div>';
   }).join('') + '</div>';
+  // клик по строке курса = фильтр таблицы
+  coursesBody.querySelectorAll('.seg-row[data-course]').forEach(row => {
+    row.addEventListener('click', () => {
+      const courseName = row.getAttribute('data-course').replace(/&quot;/g, '"');
+      STATE.courseFilter = courseName;
+      document.getElementById('course-select').value = courseName;
+      renderClients(aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
+      document.querySelector('table.clients').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
 }
 
 function renderSegments(agg25, agg26) {
@@ -736,6 +770,24 @@ document.getElementById('search').addEventListener('input', (e) => {
   STATE.search = e.target.value.trim();
   renderClients(aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
 });
+
+document.getElementById('course-select').addEventListener('change', (e) => {
+  STATE.courseFilter = e.target.value;
+  renderClients(aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
+});
+
+function populateCourseSelect() {
+  const courses = new Map();
+  STATE.data.payments.forEach(p => {
+    const c = (p.course || '').trim();
+    if (c) courses.set(c, (courses.get(c) || 0) + p.amount);
+  });
+  const sorted = [...courses.entries()].sort((a,b) => b[1] - a[1]);
+  const sel = document.getElementById('course-select');
+  sel.innerHTML = '<option value="">— все курсы —</option>' + sorted.map(([name, sum]) =>
+    '<option value="' + name.replace(/"/g, '&quot;') + '">' + name + ' (' + Math.round(sum).toLocaleString('ru-RU') + ' р)</option>'
+  ).join('');
+}
 document.querySelectorAll('table.clients th').forEach(th => {
   th.addEventListener('click', () => {
     const k = th.dataset.sort;
@@ -798,6 +850,7 @@ document.getElementById('file-input').addEventListener('change', (e) => {
         });
       });
       STATE.data = { meta: { generated_at: new Date().toISOString().slice(0,10), source: file.name, years: [2025, 2026] }, payments: newPayments };
+      populateCourseSelect();
       render();
       const haveCourses = hasCourseField(newPayments);
       alert('Загружено ' + newPayments.length + ' платежей из ' + file.name + (haveCourses ? '\n\n✓ Найдена колонка с курсами — разрез по курсам активирован.' : '\n\n(Колонки с курсом не обнаружено)'));
@@ -821,6 +874,7 @@ document.getElementById('btn-load-api').addEventListener('click', async () => {
     STATE.data = j;
     document.getElementById('api-status').classList.add('connected');
     document.getElementById('api-status').innerHTML = '<span class="dot"></span> AlphaCRM API · подключён · ' + j.payments.length + ' платежей';
+    populateCourseSelect();
     render();
   } catch (err) { alert('Ошибка API: ' + err.message); }
   finally { btn.textContent = oldText; btn.disabled = false; }
@@ -854,6 +908,7 @@ async function autoLoad() {
     STATE.data = j;
     document.getElementById('api-status').classList.add('connected');
     document.getElementById('api-status').innerHTML = '<span class="dot"></span> AlphaCRM API · подключён · ' + j.payments.length + ' платежей';
+    populateCourseSelect();
     render();
   } catch (err) {
     document.getElementById('data-info').textContent = 'Ошибка: ' + err.message;
