@@ -431,7 +431,6 @@ function buildClientsTable(agg25, agg26) {
   const rows = [];
   const courseFilter = STATE.courseFilter;
   all.forEach(key => {
-    const status = clientStatus(key, agg25, agg26);
     const c25 = agg25.byClient.get(key);
     const c26 = agg26.byClient.get(key);
     const useC = c26 || c25;
@@ -447,6 +446,16 @@ function buildClientsTable(agg25, agg26) {
     const fc26 = filterPays(c26);
     // если активен фильтр курса и клиент не учится на этом курсе — пропускаем
     if (courseFilter && !fc25 && !fc26) return;
+    // статус: если фильтр по курсу — считаем по этому курсу, иначе общий
+    let status;
+    if (courseFilter) {
+      if (fc25 && fc26) status = 'returning';
+      else if (fc26) status = 'new';
+      else if (fc25) status = 'lost';
+      else status = 'unknown';
+    } else {
+      status = clientStatus(key, agg25, agg26);
+    }
     const refC = fc26 || fc25 || useC;
     const dates25 = fc25 ? fc25.payments.map(p => p.date) : [];
     const dates26 = fc26 ? fc26.payments.map(p => p.date) : [];
