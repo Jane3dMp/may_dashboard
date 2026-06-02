@@ -18,9 +18,8 @@
   --border: 1.5px solid var(--ink); --border-thin: 1px solid var(--gray-4);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { background: var(--paper); color: var(--ink); font-family: 'Manrope', sans-serif; font-feature-settings: 'tnum' on, 'cv11' on; }
+html, body { background: var(--paper); color: var(--ink); font-family: 'Manrope', sans-serif; font-feature-settings: 'tnum' on; }
 .mono { font-family: 'JetBrains Mono', monospace; font-feature-settings: 'tnum' on; }
-.display { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.02em; line-height: 1; }
 .shell { max-width: 1400px; margin: 0 auto; padding: 24px 32px 80px; }
 @media (max-width: 720px) { .shell { padding: 16px; } }
 
@@ -31,25 +30,24 @@ header.top { display: flex; justify-content: space-between; align-items: flex-en
 .brand-name span { background: var(--yellow); padding: 2px 8px 0; }
 h1.title { font-family: 'Bebas Neue'; font-size: clamp(48px, 7vw, 96px); line-height: 0.9; letter-spacing: -0.01em; }
 .subtitle { color: var(--gray-2); font-size: 13px; font-weight: 500; margin-top: 8px; }
-.controls { display: flex; gap: 0; align-items: stretch; }
-.year-tab { font-family: 'Bebas Neue'; font-size: 22px; letter-spacing: 0.08em; padding: 10px 18px 8px; border: var(--border); background: var(--paper); cursor: pointer; transition: all 0.15s ease; border-right: none; }
+.controls { display: flex; }
+.year-tab { font-family: 'Bebas Neue'; font-size: 22px; letter-spacing: 0.08em; padding: 10px 18px 8px; border: var(--border); background: var(--paper); cursor: pointer; transition: all 0.15s; border-right: none; }
 .year-tab:last-child { border-right: var(--border); }
 .year-tab.active { background: var(--ink); color: var(--paper); }
 .year-tab:hover:not(.active) { background: var(--yellow-soft); }
 
 .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); border: var(--border); margin-bottom: 48px; }
 @media (max-width: 980px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
-.kpi { padding: 24px; border-right: var(--border-thin); position: relative; display: flex; flex-direction: column; gap: 8px; min-height: 140px; }
+.kpi { padding: 24px; border-right: var(--border-thin); display: flex; flex-direction: column; gap: 8px; min-height: 140px; }
 .kpi:last-child { border-right: none; }
 @media (max-width: 980px) { .kpi { border-bottom: var(--border-thin); } .kpi:nth-child(2n) { border-right: none; } }
 .kpi-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gray-2); font-weight: 600; }
 .kpi-value { font-family: 'Bebas Neue'; font-size: 56px; line-height: 0.95; }
 .kpi-value.small { font-size: 42px; }
-.kpi-delta { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; font-family: 'JetBrains Mono'; }
+.kpi-delta { display: inline-flex; gap: 4px; font-size: 12px; font-weight: 600; font-family: 'JetBrains Mono'; }
 .kpi-delta.up { color: var(--green); } .kpi-delta.down { color: var(--red); } .kpi-delta.neutral { color: var(--gray-2); }
 .kpi-sub { font-size: 11px; color: var(--gray-2); }
 .kpi.accent { background: var(--yellow); }
-.kpi.accent .kpi-label, .kpi.accent .kpi-sub { color: var(--ink); }
 
 .section { margin-bottom: 56px; }
 .section-head { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--ink); padding-bottom: 8px; margin-bottom: 20px; flex-wrap: wrap; gap: 8px; }
@@ -59,39 +57,34 @@ h1.title { font-family: 'Bebas Neue'; font-size: clamp(48px, 7vw, 96px); line-he
 
 .chart-box { position: relative; height: 320px; padding: 16px 4px 4px; }
 .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
-.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
-@media (max-width: 900px) { .two-col, .three-col { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
 
-/* Сегменты */
 .seg-list { display: flex; flex-direction: column; gap: 12px; padding-top: 8px; }
 .seg-row { display: grid; grid-template-columns: 200px 1fr 80px 80px; gap: 12px; align-items: center; font-size: 13px; }
 .seg-name { font-weight: 600; }
-.seg-bar-wrap { background: var(--gray-4); height: 18px; position: relative; border: 1px solid var(--ink); }
+.seg-bar-wrap { background: var(--gray-4); height: 18px; border: 1px solid var(--ink); }
 .seg-bar { background: var(--yellow); height: 100%; border-right: 1px solid var(--ink); }
 .seg-bar.alt { background: var(--ink); }
 .seg-amt { font-family: 'JetBrains Mono'; font-size: 12px; text-align: right; font-weight: 600; }
 .seg-pct { font-family: 'JetBrains Mono'; font-size: 11px; text-align: right; color: var(--gray-2); }
 
-/* Кассы */
 .cash-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 @media (max-width: 720px) { .cash-grid { grid-template-columns: 1fr; } }
-.cash-card { border: var(--border); padding: 20px; position: relative; min-height: 200px; display: flex; flex-direction: column; gap: 10px; }
+.cash-card { border: var(--border); padding: 20px; min-height: 200px; display: flex; flex-direction: column; gap: 10px; }
 .cash-card .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700; color: var(--gray-2); }
 .cash-card .val { font-family: 'Bebas Neue'; font-size: 56px; line-height: 0.95; }
 .cash-card .pct { font-family: 'JetBrains Mono'; font-size: 14px; font-weight: 600; }
 .cash-card .compare { font-size: 11px; color: var(--gray-2); margin-top: 6px; padding-top: 10px; border-top: var(--border-thin); }
 .cash-card .compare strong { color: var(--ink); font-family: 'JetBrains Mono'; }
 .cash-card.cash-cash { background: var(--yellow); }
-.cash-card.cash-term { background: var(--paper); }
 .cash-card.cash-erip { background: var(--ink); color: var(--paper); }
 .cash-card.cash-erip .label, .cash-card.cash-erip .compare { color: var(--gray-3); }
 .cash-card.cash-erip .compare strong { color: var(--paper); }
 .cash-card.cash-erip .compare { border-top-color: var(--gray-1); }
 
-/* Когорты */
 .cohort-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 @media (max-width: 720px) { .cohort-grid { grid-template-columns: 1fr; } }
-.cohort-card { border: var(--border); padding: 24px; position: relative; min-height: 240px; }
+.cohort-card { border: var(--border); padding: 24px; min-height: 240px; }
 .cohort-card .badge { font-family: 'Bebas Neue'; font-size: 14px; letter-spacing: 0.08em; padding: 4px 10px 2px; background: var(--ink); color: var(--paper); display: inline-block; margin-bottom: 14px; }
 .cohort-card.fresh .badge { background: var(--yellow); color: var(--ink); }
 .cohort-card .name { font-family: 'Bebas Neue'; font-size: 32px; line-height: 1; margin-bottom: 4px; }
@@ -101,25 +94,34 @@ h1.title { font-family: 'Bebas Neue'; font-size: clamp(48px, 7vw, 96px); line-he
 .cohort-stat .val { font-family: 'Bebas Neue'; font-size: 30px; line-height: 1; margin-top: 2px; }
 .cohort-stat .ext { font-size: 11px; color: var(--gray-2); font-family: 'JetBrains Mono'; margin-top: 2px; }
 
-/* Клиенты */
-.filters { display: flex; gap: 0; align-items: stretch; flex-wrap: wrap; margin-bottom: 0; border: var(--border); background: var(--paper); }
+/* === Courses block === */
+.courses-empty { border: 2px dashed var(--gray-3); padding: 32px; text-align: center; }
+.courses-empty .icon { font-family: 'Bebas Neue'; font-size: 48px; color: var(--gray-3); line-height: 1; margin-bottom: 12px; }
+.courses-empty h3 { font-family: 'Bebas Neue'; font-size: 24px; letter-spacing: 0.04em; margin-bottom: 8px; }
+.courses-empty p { font-size: 13px; color: var(--gray-2); max-width: 540px; margin: 0 auto 12px; line-height: 1.5; }
+.courses-empty code { background: var(--paper-2); padding: 2px 6px; font-family: 'JetBrains Mono'; font-size: 12px; }
+.courses-empty details { margin-top: 12px; font-size: 12px; color: var(--gray-2); text-align: left; max-width: 540px; margin-left: auto; margin-right: auto; }
+.courses-empty summary { cursor: pointer; font-weight: 600; color: var(--ink); padding: 6px 0; }
+.courses-empty ol { padding-left: 20px; line-height: 1.7; }
+
+.filters { display: flex; border: var(--border); background: var(--paper); flex-wrap: wrap; }
 .filter-group { display: flex; border-right: var(--border-thin); }
 .filter-group:last-child { border-right: none; flex: 1; min-width: 180px; }
-.filter-btn { font-family: 'Manrope'; font-size: 12px; font-weight: 600; letter-spacing: 0.04em; padding: 12px 14px; border: none; background: var(--paper); cursor: pointer; text-transform: uppercase; color: var(--gray-2); border-right: var(--border-thin); transition: all 0.12s; }
+.filter-btn { font-family: 'Manrope'; font-size: 12px; font-weight: 600; letter-spacing: 0.04em; padding: 12px 14px; border: none; background: var(--paper); cursor: pointer; text-transform: uppercase; color: var(--gray-2); border-right: var(--border-thin); }
 .filter-btn:last-child { border-right: none; }
 .filter-btn:hover { color: var(--ink); background: var(--paper-2); }
 .filter-btn.active { background: var(--ink); color: var(--paper); }
-.filter-btn .pill { display: inline-block; background: var(--gray-4); color: var(--ink); font-family: 'JetBrains Mono'; font-size: 10px; padding: 1px 5px; margin-left: 6px; border-radius: 2px; font-weight: 500; }
+.filter-btn .pill { display: inline-block; background: var(--gray-4); color: var(--ink); font-family: 'JetBrains Mono'; font-size: 10px; padding: 1px 5px; margin-left: 6px; border-radius: 2px; }
 .filter-btn.active .pill { background: var(--yellow); }
 .search-input { border: none; padding: 12px 14px; font-family: 'Manrope'; font-size: 13px; background: transparent; width: 100%; outline: none; }
 .search-input::placeholder { color: var(--gray-3); }
-.table-wrap { border: var(--border); border-top: none; max-height: 620px; overflow-y: auto; overflow-x: auto; background: var(--paper); }
+.table-wrap { border: var(--border); border-top: none; max-height: 620px; overflow: auto; }
 table.clients { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 920px; }
 table.clients thead { position: sticky; top: 0; background: var(--paper); z-index: 1; }
 table.clients th { text-align: left; padding: 12px 12px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; color: var(--gray-2); border-bottom: 1.5px solid var(--ink); cursor: pointer; user-select: none; white-space: nowrap; }
-table.clients th:hover { color: var(--ink); }
 table.clients th .arr { color: var(--ink); margin-left: 4px; }
-table.clients td { padding: 10px 12px; border-bottom: var(--border-thin); vertical-align: middle; white-space: nowrap; }
+table.clients td { padding: 10px 12px; border-bottom: var(--border-thin); white-space: nowrap; }
+table.clients tbody tr { cursor: pointer; transition: background 0.1s; }
 table.clients tbody tr:hover { background: var(--yellow-soft); }
 .tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 8px; border: 1px solid var(--ink); border-radius: 2px; }
 .tag.returning { background: var(--yellow); }
@@ -133,13 +135,44 @@ table.clients tbody tr:hover { background: var(--yellow-soft); }
 .num.dim { color: var(--gray-3); font-weight: 400; }
 .num.delta-up { color: var(--green); font-weight: 600; }
 .num.delta-down { color: var(--red); font-weight: 600; }
-.empty-state { padding: 60px 20px; text-align: center; color: var(--gray-2); font-size: 13px; }
+.click-hint { font-size: 11px; color: var(--gray-2); font-family: 'JetBrains Mono'; }
 
-.toolbar { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 24px; padding-bottom: 16px; }
-.btn { font-family: 'Manrope'; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; padding: 10px 16px; border: var(--border); background: var(--paper); color: var(--ink); cursor: pointer; text-transform: uppercase; display: inline-flex; align-items: center; gap: 8px; transition: all 0.15s; }
+.toolbar { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 24px; }
+.btn { font-family: 'Manrope'; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; padding: 10px 16px; border: var(--border); background: var(--paper); color: var(--ink); cursor: pointer; text-transform: uppercase; display: inline-flex; gap: 8px; }
 .btn:hover { background: var(--ink); color: var(--paper); }
 .btn.primary { background: var(--yellow); }
 .btn.primary:hover { background: var(--ink); color: var(--yellow); }
+
+/* === Drawer === */
+.drawer-backdrop { position: fixed; inset: 0; background: rgba(10,10,10,0.4); z-index: 50; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+.drawer-backdrop.open { opacity: 1; pointer-events: auto; }
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(540px, 100vw); background: var(--paper); border-left: var(--border); z-index: 51; transform: translateX(100%); transition: transform 0.25s ease; overflow-y: auto; }
+.drawer.open { transform: translateX(0); }
+.drawer-head { padding: 28px 28px 20px; border-bottom: var(--border); position: sticky; top: 0; background: var(--paper); z-index: 1; }
+.drawer-close { position: absolute; top: 20px; right: 20px; border: var(--border); background: var(--paper); width: 36px; height: 36px; cursor: pointer; font-size: 18px; font-family: 'Bebas Neue'; line-height: 1; padding: 0; }
+.drawer-close:hover { background: var(--ink); color: var(--paper); }
+.drawer-name { font-family: 'Bebas Neue'; font-size: 36px; line-height: 1; letter-spacing: -0.01em; padding-right: 50px; }
+.drawer-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.drawer-body { padding: 24px 28px 60px; }
+.drawer-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px; }
+.drawer-stat { border: var(--border-thin); padding: 14px 16px; }
+.drawer-stat .lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gray-2); font-weight: 600; }
+.drawer-stat .val { font-family: 'Bebas Neue'; font-size: 32px; line-height: 1; margin-top: 4px; }
+.drawer-stat .ext { font-size: 11px; color: var(--gray-2); font-family: 'JetBrains Mono'; margin-top: 2px; }
+.drawer-stat.accent { background: var(--yellow); border-color: var(--ink); }
+
+.year-block { margin-bottom: 24px; }
+.year-block-head { font-family: 'Bebas Neue'; font-size: 22px; letter-spacing: 0.04em; border-bottom: 1px solid var(--ink); padding-bottom: 4px; margin-bottom: 10px; display: flex; justify-content: space-between; }
+.year-block-head .total { font-family: 'JetBrains Mono'; font-size: 14px; font-weight: 600; }
+.year-block.empty .year-block-head { color: var(--gray-3); border-color: var(--gray-3); }
+.year-block.empty .empty-msg { font-size: 12px; color: var(--gray-3); font-style: italic; padding: 6px 0; }
+.payment-row { display: grid; grid-template-columns: 70px 1fr auto 90px; gap: 12px; padding: 8px 0; border-bottom: 1px dashed var(--gray-4); font-size: 12px; align-items: center; }
+.payment-row:last-child { border-bottom: none; }
+.payment-row .date { font-family: 'JetBrains Mono'; color: var(--gray-2); }
+.payment-row .cashbox { font-family: 'JetBrains Mono'; font-size: 11px; color: var(--gray-2); }
+.payment-row .amount { font-family: 'JetBrains Mono'; font-weight: 600; text-align: right; }
+.drawer-nav { display: flex; gap: 8px; margin-top: 24px; padding-top: 20px; border-top: var(--border-thin); }
+.drawer-nav .btn { flex: 1; justify-content: center; }
 
 footer.bottom { margin-top: 80px; padding-top: 32px; border-top: var(--border); font-size: 12px; color: var(--gray-2); line-height: 1.6; }
 footer.bottom .api-status { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border: 1px solid var(--gray-3); border-radius: 2px; font-family: 'JetBrains Mono'; font-size: 11px; }
@@ -152,14 +185,9 @@ footer.bottom code { background: var(--paper-2); padding: 2px 6px; font-family: 
 .kpi:nth-child(1) { animation-delay: 0.05s; } .kpi:nth-child(2) { animation-delay: 0.1s; }
 .kpi:nth-child(3) { animation-delay: 0.15s; } .kpi:nth-child(4) { animation-delay: 0.2s; }
 .kpi:nth-child(5) { animation-delay: 0.25s; }
-
-.notice { border: var(--border-thin); border-left: 4px solid var(--yellow); background: var(--paper-2); padding: 12px 16px; font-size: 12px; color: var(--gray-1); margin-bottom: 24px; line-height: 1.5; }
-.notice strong { color: var(--ink); }
 </style>
-</head>
-<body>
+</head><body>
 <div class="shell">
-
   <header class="top">
     <div>
       <div class="brand">
@@ -179,15 +207,13 @@ footer.bottom code { background: var(--paper-2); padding: 2px 6px; font-family: 
   <div class="toolbar">
     <button class="btn primary" id="btn-load-excel">↑ Загрузить Excel</button>
     <input type="file" id="file-input" accept=".xlsx,.xls" style="display:none">
-    <button class="btn" id="btn-load-api" title="Подключение к AlphaCRM">↻ Обновить из AlphaCRM</button>
+    <button class="btn" id="btn-load-api">↻ Обновить из AlphaCRM</button>
     <button class="btn" id="btn-export">↓ Экспорт CSV</button>
     <span style="margin-left:auto; font-family: 'JetBrains Mono'; font-size: 11px; color: var(--gray-2);" id="data-info"></span>
   </div>
 
-  <!-- KPI -->
   <div class="kpi-grid" id="kpi-grid"></div>
 
-  <!-- Динамика -->
   <section class="section">
     <div class="section-head">
       <span class="section-title">Динамика продаж</span>
@@ -196,7 +222,6 @@ footer.bottom code { background: var(--paper-2); padding: 2px 6px; font-family: 
     <div class="chart-box"><canvas id="chart-dynamics"></canvas></div>
   </section>
 
-  <!-- Каналы оплаты -->
   <section class="section">
     <div class="section-head">
       <span class="section-title">Каналы оплаты</span>
@@ -205,7 +230,6 @@ footer.bottom code { background: var(--paper-2); padding: 2px 6px; font-family: 
     <div class="cash-grid" id="cash-grid"></div>
   </section>
 
-  <!-- Когорты -->
   <section class="section">
     <div class="section-head">
       <span class="section-title">Когорты клиентов</span>
@@ -214,7 +238,14 @@ footer.bottom code { background: var(--paper-2); padding: 2px 6px; font-family: 
     <div class="cohort-grid" id="cohort-grid"></div>
   </section>
 
-  <!-- Сегменты -->
+  <section class="section" id="courses-section">
+    <div class="section-head">
+      <span class="section-title">Разрез по курсам</span>
+      <span class="section-meta" id="courses-meta"></span>
+    </div>
+    <div id="courses-body"></div>
+  </section>
+
   <section class="section">
     <div class="section-head">
       <span class="section-title">Сегменты продаж</span>
@@ -232,11 +263,13 @@ footer.bottom code { background: var(--paper-2); padding: 2px 6px; font-family: 
     </div>
   </section>
 
-  <!-- Клиенты -->
   <section class="section">
     <div class="section-head">
       <span class="section-title">Клиенты · сравнение 25/26</span>
-      <span class="section-meta" id="clients-count"></span>
+      <span class="section-meta">
+        <span class="click-hint">↓ клик по строке — детализация</span> ·
+        <span id="clients-count"></span>
+      </span>
     </div>
     <div class="filters">
       <div class="filter-group" id="status-filters">
@@ -275,11 +308,28 @@ footer.bottom code { background: var(--paper-2); padding: 2px 6px; font-family: 
     </div>
     <div>
       Для подключения к AlphaCRM нужно: (1) развернуть Google Apps Script-прокси с doGet, возвращающим JSON из <code>proznanie4eee.s20.online/v2api/2/pay/index</code>;
-      (2) указать URL прокси в константе <code>API_ENDPOINT</code> в коде. Структура ответа должна включать <code>date</code>, <code>customer_name</code>, <code>summa</code>, <code>group_name</code> (для разреза по курсам).
+      (2) указать URL прокси в константе <code>API_ENDPOINT</code>. Структура ответа должна включать <code>date</code>, <code>customer_name</code>, <code>summa</code>, <code>group_name</code>.
     </div>
   </footer>
-
 </div>
+
+<!-- Drawer -->
+<div class="drawer-backdrop" id="drawer-backdrop"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <button class="drawer-close" id="drawer-close">×</button>
+    <div class="drawer-name" id="drawer-name"></div>
+    <div class="drawer-tags" id="drawer-tags"></div>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-stats" id="drawer-stats"></div>
+    <div id="drawer-history"></div>
+    <div class="drawer-nav">
+      <button class="btn" id="drawer-prev">← пред.</button>
+      <button class="btn" id="drawer-next">след. →</button>
+    </div>
+  </div>
+</aside>
 
 <script>
 const EMBEDDED_DATA = {"meta":{"generated_at":"2026-06-01","source":"Майские.xlsx","years":[2025,2026]},"payments":[{"date":"2025-05-24","client":"Абухович Павел","amount":108.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-14","client":"Аладьев Тимофей","amount":540.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-14","client":"Аладьев Тимофей","amount":152.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-14","client":"Аладьев Тимофей","amount":152.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-22","client":"Алашков Павел","amount":133.0,"cashbox":"Могилев — Терминал","comment":"майский 25/26","year":2025},{"date":"2025-05-22","client":"Алашков Тимофей","amount":133.0,"cashbox":"Могилев — Терминал","comment":"майский 25/26","year":2025},{"date":"2025-05-21","client":"Антонов Михаил","amount":136.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25\\26","year":2025},{"date":"2025-06-05","client":"Антонова Маша Игоревна","amount":540.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25/26","year":2025},{"date":"2025-05-14","client":"Арестова Ева #","amount":38.0,"cashbox":"Могилев — Наличные","comment":"майский 252\\6","year":2025},{"date":"2025-05-31","client":"Арестова Ева #","amount":110.0,"cashbox":"Могилев — Наличные","comment":"майский 252\\6","year":2025},{"date":"2025-05-23","client":"Артюх Дарья","amount":152.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-23","client":"Артюх Дарья","amount":152.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-25","client":"Барановская Мия","amount":136.0,"cashbox":"Могилев — Терминал","comment":"майский 25/26","year":2025},{"date":"2025-05-21","client":"Басенко Роман Вадимович","amount":76.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25/26","year":2025},{"date":"2025-05-17","client":"Беляева Алиса","amount":100.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-31","client":"Бернат Сергей Дмитриевич","amount":511.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-04-13","client":"Бернацкая Дарья","amount":76.0,"cashbox":"Могилев — Наличные","comment":"майский 25/26","year":2025},{"date":"2025-05-28","client":"Бессмертный Савелий Никитич","amount":136.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25/26","year":2025},{"date":"2025-04-14","client":"Битковский Ян","amount":972.0,"cashbox":"Могилев — Наличные","comment":"майский 25","year":2025},{"date":"2025-05-31","client":"Борисевич Тимур","amount":108.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-27","client":"Борисов Богдан Сергеевич","amount":152.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-28","client":"Борисов Евгений Андреевич","amount":76.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-25","client":"Бородина Александра Артемовна","amount":88.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25/26","year":2025},{"date":"2025-05-06","client":"Борсукова Арина Алексеевна","amount":88.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25/26","year":2025},{"date":"2025-05-24","client":"Буянов Артем Александрович","amount":76.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-29","client":"Вакулич Ян Максимович","amount":38.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25\\26","year":2025},{"date":"2025-05-31","client":"Васин Кирилл","amount":57.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-02","client":"Воинов Марк","amount":108.0,"cashbox":"Могилев — Терминал","comment":"майский 25/26","year":2025},{"date":"2025-05-12","client":"Воронкова Мария","amount":152.0,"cashbox":"Могилев — Наличные","comment":"майский 25/26","year":2025},{"date":"2025-05-31","client":"Гайкова Мирослава","amount":340.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-30","client":"Галиченко Алексей","amount":152.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25\\26","year":2025},{"date":"2025-05-27","client":"Ганакова Анастасия","amount":100.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-29","client":"Гвоздь Артур","amount":152.0,"cashbox":"Могилев — Наличные","comment":"майский 25/26","year":2025},{"date":"2025-05-30","client":"Гвоздь Эмилия","amount":142.5,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-21","client":"Гнеденко Александр","amount":76.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-22","client":"Горностаева Амира","amount":152.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-28","client":"Грибова Мария","amount":152.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-25","client":"Гулидова Ева","amount":136.0,"cashbox":"Могилев — Наличные","comment":"майский 25/26","year":2025},{"date":"2025-05-21","client":"Даниленко Максим","amount":540.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25\\26","year":2025},{"date":"2025-05-24","client":"Даниленко Татьяна","amount":108.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-04-13","client":"Дворецкая Дарьяна","amount":200.0,"cashbox":"Могилев — Наличные","comment":"Майский 25","year":2025},{"date":"2025-05-28","client":"Драздова Есения","amount":138.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-29","client":"Еркович Агата","amount":96.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-17","client":"Ермаков Кирилл","amount":76.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-19","client":"Ермаков Назар","amount":152.0,"cashbox":"Могилев — Терминал","comment":"майский 25/26","year":2025},{"date":"2025-05-24","client":"Ермоленко Костя","amount":540.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-29","client":"Жаголкина Мария","amount":76.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-15","client":"Жиркевич Екатерина","amount":76.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-15","client":"Жиркевич Екатерина","amount":152.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-04-23","client":"Зиньчук Тимофей","amount":152.0,"cashbox":"Могилев — Наличные","comment":"майски хвз","year":2025},{"date":"2025-05-28","client":"Зиньчук Тимофей","amount":76.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-29","client":"Зиньчук Тимофей","amount":84.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-10","client":"Исмаилов Кирилл","amount":108.0,"cashbox":"Могилев — Терминал","comment":"майский 25/26","year":2025},{"date":"2025-05-17","client":"Исмаилов Кирилл","amount":108.0,"cashbox":"Могилев — Терминал","comment":"майский 25/26","year":2025},{"date":"2025-05-25","client":"Карпович Марк","amount":540.0,"cashbox":"Могилев — Наличные","comment":"оплата майского абонемента","year":2025},{"date":"2025-05-30","client":"Карпович Тимофей","amount":136.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-29","client":"Киреенко Михаил","amount":152.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25/26","year":2025},{"date":"2025-04-30","client":"Ключников Тимур","amount":19.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-28","client":"Ключников Тимур","amount":57.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-04-08","client":"Ковалев Архип Артёмович","amount":48.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-31","client":"Ковалев Архип Артёмович","amount":105.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-11","client":"Ковалева Дарина","amount":136.0,"cashbox":"Могилев — Наличные","comment":"майский 25/26","year":2025},{"date":"2025-05-25","client":"Ковалевская Валерия","amount":112.0,"cashbox":"Могилев — Наличные","comment":"майский 25/26","year":2025},{"date":"2025-05-30","client":"Ковалевская София","amount":136.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-08","client":"Козлова Виктория","amount":152.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25/26","year":2025},{"date":"2025-05-28","client":"Козлова Виктория","amount":540.0,"cashbox":"Могилев — Терминал","comment":"майский 25/26","year":2025},{"date":"2025-05-10","client":"Козырицкая Таисия","amount":108.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-28","client":"Койфман Ваня","amount":540.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-25","client":"Колесников Арсений","amount":540.0,"cashbox":"Могилев — Наличные","comment":"майский 25/26","year":2025},{"date":"2025-05-23","client":"Кондрашук Михаил","amount":136.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25\\26","year":2025},{"date":"2025-05-30","client":"Конев Тимофей","amount":108.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-13","client":"Короткевич Миша","amount":108.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-04-25","client":"Корсак Ева","amount":9.5,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-30","client":"Корсак Ева","amount":142.5,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-23","client":"Космовская София","amount":152.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25\\26","year":2025},{"date":"2025-05-21","client":"Костюков Герман","amount":540.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-31","client":"Красев Михаил","amount":540.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-28","client":"Красиков Иван","amount":108.0,"cashbox":"Могилев — Терминал","comment":"майский 25/26","year":2025},{"date":"2025-05-28","client":"Красников Никита Вадимович","amount":76.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-30","client":"Крылова Александра #","amount":152.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25\\26","year":2025},{"date":"2025-05-19","client":"Крючкова Ева","amount":84.0,"cashbox":"Могилев — Наличные","comment":"майский 25/26","year":2025},{"date":"2025-05-29","client":"Крючкова Ульяна","amount":152.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25\\26","year":2025},{"date":"2025-05-19","client":"Кудречёв Даниил","amount":152.0,"cashbox":"Могилев — Наличные","comment":"майский 25/26","year":2025},{"date":"2025-05-30","client":"Кузуб Варя","amount":73.5,"cashbox":"Могилев — ЕРИП","comment":"майский 25\\25","year":2025},{"date":"2025-05-25","client":"Купреев Кирилл","amount":152.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25/26","year":2025},{"date":"2025-05-20","client":"Лаппо Александр","amount":152.0,"cashbox":"Могилев — Терминал","comment":"майский 25/26","year":2025},{"date":"2025-05-31","client":"Леонов Марк","amount":57.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25\\26","year":2025},{"date":"2025-05-28","client":"Марканов Миша","amount":152.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-28","client":"Марканова Арина","amount":152.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-14","client":"Маркосян Марат","amount":136.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-29","client":"Маханьков Ярослав Сергеевич резерв","amount":43.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-29","client":"Маханьков Ярослав Сергеевич резерв","amount":100.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-14","client":"Мачульский Роман","amount":136.0,"cashbox":"Могилев — Наличные","comment":"майский на ХВЗ","year":2025},{"date":"2025-05-22","client":"Миронова Мири","amount":96.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-22","client":"Миронова Мири","amount":100.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-23","client":"Мишур Роман","amount":171.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25\\26","year":2025},{"date":"2025-05-25","client":"Морозова Дарья","amount":112.0,"cashbox":"Могилев — Наличные","comment":"майский 25/26","year":2025},{"date":"2025-05-30","client":"Науменко Арина","amount":84.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-30","client":"Науменко Арина","amount":76.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-25","client":"Николаенко Александр","amount":152.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25/26","year":2025},{"date":"2025-05-10","client":"Осина Анна","amount":23.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25\\26","year":2025},{"date":"2025-05-10","client":"Осина Анна","amount":65.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25\\26","year":2025},{"date":"2025-05-27","client":"Панков Мирон","amount":152.0,"cashbox":"Могилев — Терминал","comment":"майский 25/26","year":2025},{"date":"2025-04-30","client":"Пантелеев Даниил","amount":103.5,"cashbox":"Могилев — ЕРИП","comment":"майский 25\\26","year":2025},{"date":"2025-05-30","client":"Пантелеев Даниил","amount":48.5,"cashbox":"Могилев — ЕРИП","comment":"майский 25\\26","year":2025},{"date":"2025-04-14","client":"Пашкевич Виктория","amount":152.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25/26","year":2025},{"date":"2025-05-31","client":"Петров Давид","amount":76.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-30","client":"Петроченко Степан","amount":130.5,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-06-30","client":"Пешкун Иван","amount":128.0,"cashbox":"Могилев — Наличные","comment":"майский 25/26, оплатила 30.06, см ЭВ","year":2025},{"date":"2025-05-24","client":"Погодин Филипп","amount":540.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-31","client":"Подобед Василиса","amount":63.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-20","client":"Полонников Даниил","amount":108.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-13","client":"Полонникова Дарья","amount":150.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-20","client":"Полонникова Дарья","amount":2.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-20","client":"Полонникова Дарья","amount":76.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-13","client":"Потапцев Влад","amount":152.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25/26","year":2025},{"date":"2025-05-24","client":"Прокин Роман","amount":40.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-24","client":"Прокин Роман","amount":152.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-24","client":"Прокин Роман","amount":108.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-24","client":"Прокин Роман","amount":72.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-19","client":"Пуховский Тимофей","amount":96.0,"cashbox":"Могилев — Терминал","comment":"майский 25/26","year":2025},{"date":"2025-05-24","client":"Пушкарёв Алексей","amount":328.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-30","client":"Романков Алексей","amount":486.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-20","client":"Савицкий Артемий","amount":136.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-20","client":"Савицкий Матвей","amount":136.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-31","client":"Савчук Мия","amount":136.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25\\26","year":2025},{"date":"2025-05-29","client":"Садовская Алена","amount":136.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25/26","year":2025},{"date":"2025-05-23","client":"Серов Кирилл","amount":122.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-18","client":"Смолко Александра","amount":112.0,"cashbox":"Могилев — Наличные","comment":"майский 25/26","year":2025},{"date":"2025-05-12","client":"Смоляк Василиса","amount":88.0,"cashbox":"Могилев — ЕРИП","comment":"майский 2025","year":2025},{"date":"2025-05-21","client":"Соколова София","amount":76.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-03","client":"Соловьёв Артём","amount":108.0,"cashbox":"Могилев — Наличные","comment":"майский25 /26","year":2025},{"date":"2025-05-28","client":"Сподобаев Степан","amount":150.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25\\26","year":2025},{"date":"2025-05-31","client":"Степаненко Дарья","amount":112.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25/26","year":2025},{"date":"2025-05-31","client":"Степаненко Дарья","amount":152.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25/26","year":2025},{"date":"2025-05-22","client":"Супиталёв Роман","amount":88.0,"cashbox":"Могилев — Терминал","comment":"майский 25/26","year":2025},{"date":"2025-05-14","client":"Сычёв Алексей","amount":152.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25\\26","year":2025},{"date":"2025-05-14","client":"Сычёв Алексей","amount":152.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25\\26","year":2025},{"date":"2025-05-08","client":"Сычков Артем","amount":28.5,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-29","client":"Сычков Артем","amount":123.5,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-26","client":"Тарасов Миша","amount":136.0,"cashbox":"Могилев — Наличные","comment":"майский25/26","year":2025},{"date":"2025-05-23","client":"Толмачев Михаил","amount":152.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-31","client":"Трофимова Арина","amount":152.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-31","client":"Туманина Катя","amount":540.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-29","client":"Усик Кирилл","amount":133.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25/26","year":2025},{"date":"2025-05-25","client":"Федосова Анна","amount":110.0,"cashbox":"Могилев — Наличные","comment":"майский 25/26","year":2025},{"date":"2025-05-25","client":"Федосова Анна","amount":2.0,"cashbox":"Могилев — Терминал","comment":"майский 25/26","year":2025},{"date":"2025-05-17","client":"Фомченко Ян","amount":480.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26. Переном 60 руб на базовый","year":2025},{"date":"2025-05-28","client":"Халандач Иван","amount":136.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-28","client":"Халандач Платон","amount":152.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-11","client":"Хара Александр","amount":112.0,"cashbox":"Могилев — Наличные","comment":"майский","year":2025},{"date":"2025-05-30","client":"Хаританович Костя","amount":26.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-14","client":"Хаританович Костя","amount":76.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-30","client":"Хаританович Костя","amount":110.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-31","client":"Харланов Александр","amount":88.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-11","client":"Цыганов Богдан","amount":136.0,"cashbox":"Могилев — Наличные","comment":"майский 25/26","year":2025},{"date":"2025-05-11","client":"Цыганов Тимур #","amount":152.0,"cashbox":"Могилев — Наличные","comment":"майский 25/26","year":2025},{"date":"2025-05-11","client":"Цыганова Николь","amount":136.0,"cashbox":"Могилев — Наличные","comment":"майский 25/26","year":2025},{"date":"2025-05-23","client":"Цыркунова Александра","amount":152.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-17","client":"Шагов Иван","amount":540.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-09","client":"Шайдова Алиса","amount":136.0,"cashbox":"Могилев — ЕРИП","comment":"майский ХВЗ 25/26","year":2025},{"date":"2025-05-19","client":"Шамко Семён","amount":152.0,"cashbox":"Могилев — Наличные","comment":"майский 25/26","year":2025},{"date":"2025-05-19","client":"Шамко Семён","amount":2.0,"cashbox":"Могилев — Терминал","comment":"майский 25/26","year":2025},{"date":"2025-05-26","client":"Шарапов Михаил","amount":96.0,"cashbox":"Могилев — Терминал","comment":"майский 25/26","year":2025},{"date":"2025-05-06","client":"Шинкевич Федор","amount":33.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-30","client":"Шинкевич Федор","amount":48.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-30","client":"Шинкевич Федор","amount":152.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-05","client":"Шпакова Арина","amount":152.0,"cashbox":"Могилев — Терминал","comment":"майский 25/26","year":2025},{"date":"2025-05-26","client":"Шпакова Арина","amount":152.0,"cashbox":"Могилев — Терминал","comment":"майский 25/26","year":2025},{"date":"2025-05-27","client":"Эрдман Александр","amount":136.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-27","client":"Эрдман Александр","amount":76.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-04-23","client":"Юрков Егор Сергеевич","amount":152.0,"cashbox":"Могилев — Терминал","comment":"майский 25/26","year":2025},{"date":"2025-05-28","client":"Юрков Егор Сергеевич","amount":152.0,"cashbox":"Могилев — Терминал","comment":"майский 25/26","year":2025},{"date":"2025-05-26","client":"Юруть Алексей","amount":540.0,"cashbox":"Могилев — Терминал","comment":"майский 25/26","year":2025},{"date":"2025-05-10","client":"Якимцова Любовь","amount":108.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-10","client":"Якимцова Любовь","amount":152.0,"cashbox":"Могилев — Терминал","comment":"майский 25\\26","year":2025},{"date":"2025-05-29","client":"Ярматов Араз","amount":540.0,"cashbox":"Могилев — Наличные","comment":"майский 25/26","year":2025},{"date":"2025-05-17","client":"Яроцкий Илья","amount":108.0,"cashbox":"Могилев — Наличные","comment":"майский 25\\26","year":2025},{"date":"2025-05-30","client":"Ячник Никита","amount":152.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25\\26","year":2025},{"date":"2025-05-30","client":"Ячник София Дмитриевна","amount":136.0,"cashbox":"Могилев — ЕРИП","comment":"майский 25\\26","year":2025},{"date":"2026-05-30","client":"Матусевич Владимир","amount":272.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-31","client":"Кулешов Максим","amount":145.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-31","client":"Кравченко Даниил Анатольевич","amount":125.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-31","client":"Чечёв Михаил","amount":124.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-31","client":"Чудаковский Алексей","amount":242.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-31","client":"Тимошенко Родион","amount":272.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-31","client":"Лавренов Даниил","amount":112.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-31","client":"Щановский Владислав Сергеевич","amount":132.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-31","client":"Слиж Ульяна","amount":57.5,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-28","client":"Киреенко Василиса","amount":184.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-24","client":"Добыш Никита","amount":184.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-24","client":"Шешкин Василий резерв","amount":168.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-18","client":"Подобед Василиса Игоревна","amount":76.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-17","client":"Смоляк Василиса","amount":192.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-17","client":"Гулидова Ева","amount":132.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-17","client":"Зубков Сергей Сергеевич","amount":132.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-17","client":"Зубков Сергей Сергеевич","amount":132.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-15","client":"Петроченко Степан Вячеславович","amount":184.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-13","client":"Сычёв Алексей Игоревич","amount":272.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-13","client":"Сычёв Алексей Игоревич","amount":192.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-13","client":"Сычёв Алексей Игоревич","amount":176.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-10","client":"Петроченко Степан Вячеславович","amount":192.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-10","client":"Петроченко Степан Вячеславович","amount":96.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-04","client":"Ковалев Никита Алексеевич","amount":176.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-03","client":"Цыганова Николь Александровна","amount":176.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-04-29","client":"Вострецов Лев","amount":92.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-04-25","client":"Артеменко Полина Олеговна","amount":131.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-04-19","client":"Баронник Елизавета Васильевна","amount":140.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-04-13","client":"Ярматов Араз Тахирович","amount":272.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-06-01","client":"Прокин Роман Денисович","amount":150.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-06-01","client":"Иванов Владислав Сергеевич","amount":64.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-06-01","client":"Иванов Владислав Сергеевич","amount":120.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-31","client":"Буянов Артем Александрович","amount":168.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-31","client":"Борисов Владислав","amount":118.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-31","client":"Кабушев Даниил Денисович","amount":110.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-31","client":"Саперская Настя Андреевна","amount":158.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-31","client":"Пучкова Александра","amount":246.5,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-31","client":"Голдаева Арина","amount":176.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-31","client":"Бондаренко Макар","amount":192.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-31","client":"Ковалева Стефания Андреевна","amount":2.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-30","client":"Синяков Иван Викторович","amount":50.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-30","client":"Зайцева Мария","amount":89.5,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-30","client":"Зайцева Мария","amount":144.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-30","client":"Зайцева Мария","amount":132.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-30","client":"Зайцева Мария","amount":120.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-30","client":"Зайцева Мария","amount":120.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-30","client":"Исмаилов Кирилл","amount":72.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-30","client":"Исмаилов Кирилл","amount":60.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-30","client":"Ковалевская Валерия","amount":132.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-30","client":"Серова Анна","amount":112.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-30","client":"Авдеев Илья","amount":66.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-30","client":"Горкуша Каролина","amount":120.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-30","client":"Абухович Павел","amount":52.5,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-30","client":"Пушкарёв Алексей","amount":272.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-30","client":"Бернат Сергей","amount":272.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-30","client":"Бернат Сергей","amount":192.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-30","client":"Ковалев Архип Сергеевич","amount":84.5,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-30","client":"Старовойтова Алина Юрьевна","amount":96.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-30","client":"Старовойтова Алина Юрьевна","amount":120.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-30","client":"Хрипачев Евгений","amount":84.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-30","client":"Харланов Александр","amount":84.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-30","client":"Третьяков Тимур","amount":144.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-30","client":"Третьяков Тимур","amount":96.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-30","client":"Дигалев Богдан Сергеевич","amount":144.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-30","client":"Третьяков Тимур","amount":112.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-30","client":"Борознов Тимофей","amount":144.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-30","client":"Борознов Даниил","amount":144.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-30","client":"Демиденко Тимур Андреевич","amount":108.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-30","client":"Ходосевич Александра Сергеевна","amount":83.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-30","client":"Тимофеев Максим","amount":144.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-30","client":"Сидоренко Артем Владимирович","amount":144.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-29","client":"Борсукова Арина Алексеевна","amount":96.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-29","client":"Борсукова Арина Алексеевна","amount":112.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-29","client":"Рутман Дарья","amount":124.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-29","client":"Вотянова Алана","amount":168.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-29","client":"Кравчинская Арина","amount":192.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-29","client":"Борисов Богдан Сергеевич","amount":172.5,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-29","client":"Графа Ульяна","amount":96.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-29","client":"Графа Ульяна","amount":96.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-29","client":"Графа Алеся","amount":112.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-29","client":"Графа Алеся","amount":120.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-29","client":"Шинкевич Федор Сергеевич","amount":92.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-29","client":"Шинкевич Федор Сергеевич","amount":184.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-29","client":"Трофимова Арина","amount":176.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-29","client":"Белявский Максим","amount":96.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-29","client":"Жавнерович Вера Александровна","amount":127.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-29","client":"Туманина Екатерина Олеговна","amount":89.5,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-29","client":"Туманина Екатерина Олеговна","amount":272.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-29","client":"Погребная Полина Викторовна","amount":144.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-29","client":"Крылова Александра #","amount":184.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-29","client":"Шурханов Денис","amount":144.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-29","client":"Доста Артём Андреевич","amount":120.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-29","client":"Сидорович Тимур","amount":144.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-29","client":"Романков Алексей","amount":144.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-29","client":"Нода Савелий Антонович","amount":172.5,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-29","client":"Шайдова Алиса Александровна","amount":168.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-28","client":"Ходинский Кирилл","amount":112.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-28","client":"Крючкова Ульяна","amount":172.5,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-28","client":"Битковский Ян","amount":272.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-28","client":"Луковская Ульяна","amount":120.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-28","client":"Стяжкин Арсений Денисович","amount":127.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-28","client":"Назаров Даниил","amount":144.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-28","client":"Ефимова Майя","amount":92.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-28","client":"Заровский Иван Олегович","amount":56.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-28","client":"Ермаков Назар Александрович","amount":184.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-28","client":"Киреенко Михаил","amount":184.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-28","client":"Ступакова Кира","amount":112.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-28","client":"Ступакова Кира","amount":96.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-28","client":"Ступакова Кира","amount":96.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-28","client":"Соснин Егор","amount":120.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-28","client":"Голишевич Илья Владимирович","amount":61.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-28","client":"Кастрица Алексей Янович","amount":161.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-27","client":"Прошкина Алиса Евгеньевна","amount":95.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-27","client":"Шкляров Александр","amount":96.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-27","client":"Ребова Александра резерв","amount":132.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-27","client":"Захаренко Дмитрий","amount":92.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-27","client":"Каральков Матвей","amount":92.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-27","client":"Лепеев Лев","amount":272.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-27","client":"Ветров Дамиан","amount":192.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-27","client":"Константинович Аня Павловна","amount":176.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-27","client":"Шамко Семён","amount":180.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-27","client":"Федосенко Николай","amount":124.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-27","client":"Федосенко Кирилл","amount":124.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-27","client":"Федосенко Анна Ивановна резерв!","amount":192.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-26","client":"Зиньчук Тимофей Дмитриевич","amount":184.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-26","client":"Зиньчук Тимофей Дмитриевич","amount":92.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-26","client":"Потупикова Дарина Игоревна","amount":27.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-26","client":"Потупикова Дарина Игоревна","amount":132.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-26","client":"Абдо Йосеф","amount":96.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-26","client":"Абдо Йосеф","amount":92.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-26","client":"Изофатова Виталина","amount":40.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-26","client":"Изофатова Виталина","amount":52.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-26","client":"Эрдман Александр","amount":184.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-26","client":"Эрдман Александр","amount":92.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-26","client":"Хальченко Ян","amount":92.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-26","client":"Астапов Владислав Дмитриевич","amount":92.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-26","client":"Погодин Филипп Артурович","amount":255.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-26","client":"Мишур Роман","amount":176.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-25","client":"Фролов Михаил","amount":96.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-24","client":"Козаков Ярослав","amount":140.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-24","client":"Васковская Арина","amount":124.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-24","client":"Бильдюгов Степан","amount":144.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-24","client":"Бильдюгов Степан","amount":99.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-24","client":"Бородина Александра Артемовна","amount":96.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-24","client":"Бородина Александра Артемовна","amount":96.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-24","client":"Федосова Анна Александровна","amount":2.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-24","client":"Геспель Глеб","amount":112.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-24","client":"Мазуров Вячеслав","amount":144.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-24","client":"Юрасов Артем","amount":144.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-24","client":"Федосова Анна Александровна","amount":130.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-24","client":"Смолко Александра Вячеславовна","amount":132.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-24","client":"Исачков Артемий Юрьевич","amount":144.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-24","client":"Ковалева Стефания Андреевна","amount":130.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-24","client":"Якимцова Любовь Руслановна","amount":132.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-24","client":"Якимцова Любовь Руслановна","amount":176.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-23","client":"Павлюкович Арина (3 см 1-ая неделя, 5 смена под ?)","amount":186.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-23","client":"Павлюкович Арина (3 см 1-ая неделя, 5 смена под ?)","amount":112.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-23","client":"Павлюкович Арина (3 см 1-ая неделя, 5 смена под ?)","amount":132.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-23","client":"Павлюкович Арина (3 см 1-ая неделя, 5 смена под ?)","amount":120.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-23","client":"Кострица Степан Сергеевич","amount":124.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-23","client":"Кострица Степан Сергеевич","amount":124.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-23","client":"Кострица Степан Сергеевич","amount":132.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-23","client":"Кострица Степан Сергеевич","amount":272.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-23","client":"Подлубный Артем Евгеньевич","amount":144.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-23","client":"Шидловская Ева Дмитриевна","amount":132.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-23","client":"Шидловская Ева Дмитриевна","amount":132.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-23","client":"Шидловская Ева Дмитриевна","amount":120.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-23","client":"Красев Михаил","amount":272.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-23","client":"Шелюто Ева Дмитриевна","amount":132.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-23","client":"Носикова Дарина","amount":124.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-23","client":"Шпет Антон Денисович","amount":62.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-23","client":"Шпет Антон Денисович","amount":176.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-23","client":"Бондарева Анна","amount":144.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-23","client":"Найденок Богдан","amount":510.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-23","client":"Прилепов Максим Андреевич","amount":144.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-22","client":"Галаков Потап","amount":192.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-22","client":"Белявский Максим","amount":92.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-22","client":"Авдеев Илья","amount":72.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-22","client":"Минин Роман","amount":148.5,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-22","client":"Гилев Михаил","amount":176.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-22","client":"Гилева Елизавета","amount":176.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-22","client":"Супиталёв Роман","amount":120.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-22","client":"Воюнков Семен","amount":250.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-22","client":"Адысев Алексей","amount":60.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-21","client":"Козлова Виктория Дмитриевна","amount":176.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-21","client":"Марканова Арина","amount":112.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-21","client":"Марканова Арина","amount":176.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-21","client":"Кудрявцев Андрей","amount":168.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-20","client":"Борисов Евгений Андреевич","amount":92.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-20","client":"Кудречёв Даниил Олегович","amount":176.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-20","client":"Давыдова Агнесса","amount":168.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-20","client":"Фролов Михаил","amount":96.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-20","client":"Фролов Михаил","amount":92.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-20","client":"Иванов Максим Александрович","amount":92.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-20","client":"Лобазов Платон","amount":92.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-20","client":"Борисенко Иван","amount":92.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-20","client":"Иванов Владислав Сергеевич","amount":96.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-19","client":"Полонникова Дарья Ильинична","amount":168.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-19","client":"Полонников Даниил Ильич","amount":132.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-19","client":"Науменко Арина","amount":96.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-19","client":"Науменко Арина","amount":184.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-19","client":"Науменко Арина","amount":92.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-19","client":"Ермаков Кирилл Андреевич","amount":92.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-19","client":"Шавцов Егор Павлович","amount":136.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-18","client":"Аладьев Тимофей","amount":176.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-18","client":"Аладьев Тимофей","amount":272.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-18","client":"Аладьев Тимофей","amount":192.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-17","client":"Ковалев Никита Алексеевич","amount":272.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-17","client":"Голдаева Арина","amount":168.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-16","client":"Самусенко Радомир Дмитриевич","amount":144.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-16","client":"Жерносек Иван Дмитриевич","amount":124.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-16","client":"Жерносек Иван Дмитриевич","amount":120.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-16","client":"Яроцкий Илья Сергеевич","amount":83.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-16","client":"Шагов Иван Александрович","amount":144.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-15","client":"Евсеева Наталья","amount":184.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-15","client":"Каменева Ульяна","amount":184.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-14","client":"Цыркунова Анна Станиславовна","amount":184.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-14","client":"Цыркунова Александра Станиславовна","amount":176.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-09","client":"Беляева Алиса","amount":132.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-09","client":"Беляева Алиса","amount":120.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-09","client":"Ермоленко Константин Юрьевич","amount":144.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-07","client":"Кувшинова Мария","amount":144.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-05","client":"Таланков Михаил","amount":62.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-27","client":"Слепцов Артём","amount":92.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-31","client":"Богословский Павел","amount":132.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-31","client":"Богословский Павел","amount":17.75,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-31","client":"Богословский Павел","amount":144.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-31","client":"Кольцов Борис Иванович резерв","amount":168.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-31","client":"Морозова Дарья","amount":140.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-31","client":"Симоненко Степан Дмитриевич","amount":144.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-31","client":"Лустенков Дима","amount":144.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-31","client":"Карпович Марк","amount":144.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-31","client":"Усик Кирилл Сергеевич","amount":72.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-31","client":"Усик Кирилл Сергеевич","amount":120.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-31","client":"Усик Кирилл Сергеевич","amount":132.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-31","client":"Усик Кирилл Сергеевич","amount":176.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-31","client":"Усик Кирилл Сергеевич","amount":272.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-31","client":"Команденко Дарья","amount":132.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-31","client":"Бажкова Полина Сергеевна","amount":144.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-30","client":"Шутова Ульяна","amount":184.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-30","client":"Колесников Арсений Андреевич","amount":272.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-28","client":"Рудкова Вероника","amount":62.5,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-28","client":"Рудкова Вероника","amount":192.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-28","client":"Рудкова Вероника","amount":176.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-28","client":"Жаголкина Мария","amount":96.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-28","client":"Ковалева Полина Алексеевна","amount":184.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-28","client":"Гаврилюк Варвара","amount":176.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-28","client":"Чикова Полина","amount":54.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-27","client":"Грибова Мария","amount":176.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-27","client":"Артюх Дарья","amount":176.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-27","client":"Арестова Ева","amount":176.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-27","client":"Смычкова Полина Александровна","amount":108.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-27","client":"Степаненко Дарья Викторовна","amount":3.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-26","client":"Шершнёва Анна","amount":132.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-26","client":"Шершнёва Анна","amount":124.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-26","client":"Каплунов Михаил","amount":135.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-26","client":"Гвоздь Артур","amount":184.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-26","client":"Гвоздь Артур","amount":24.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-26","client":"Гвоздь Артур","amount":160.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-26","client":"Драздова Есения","amount":176.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-25","client":"Азаренок Савелий","amount":184.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-25","client":"Губич Тимофей","amount":192.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-25","client":"Серов Кирилл","amount":272.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-25","client":"Серов Кирилл","amount":71.5,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-25","client":"Шкиркова Кристина","amount":176.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-25","client":"Космовская София","amount":150.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-25","client":"Абразовская Диана","amount":96.0,"cashbox":"Пожарный, 19 — ЕРИП","comment":"майский","year":2026},{"date":"2026-05-25","client":"Степаненко Дарья Викторовна","amount":173.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-25","client":"Степаненко Дарья Викторовна","amount":192.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-24","client":"Козырицкая Таисия Александровна","amount":132.0,"cashbox":"Пожарный, 19 — Терминал","comment":"майский","year":2026},{"date":"2026-05-24","client":"Пынзарь София","amount":130.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-24","client":"Костюков Герман","amount":544.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026},{"date":"2026-05-24","client":"Горшова Элина","amount":168.0,"cashbox":"Пожарный, 19 — Наличные","comment":"майский","year":2026}]};
@@ -302,7 +352,7 @@ const DIMINUTIVES = {
   'федя':'федор','ярик':'ярослав','мотя':'матвей','мирик':'мирослав','арс':'арсений',
 };
 
-let STATE = { data: EMBEDDED_DATA, view: '2026', sortKey: 'amount26', sortDir: 'desc', statusFilter: 'all', search: '' };
+let STATE = { data: EMBEDDED_DATA, view: '2026', sortKey: 'amount26', sortDir: 'desc', statusFilter: 'all', search: '', drawerKey: null, drawerList: [] };
 
 const fmt = (n, d=0) => n.toLocaleString('ru-RU', {minimumFractionDigits: d, maximumFractionDigits: d});
 const fmtDate = (s) => { const d = new Date(s); return ('0'+d.getDate()).slice(-2) + '.' + ('0'+(d.getMonth()+1)).slice(-2) + '.' + d.getFullYear(); };
@@ -336,6 +386,10 @@ const SEGMENTS = [
   { label: 'Годовой / интенсив',   min: 401,   max: 99999, note: 'от 401 р' },
 ];
 
+function hasCourseField(payments) {
+  return payments.some(p => p.course && String(p.course).trim().length > 0);
+}
+
 function aggregateByYear(payments, year) {
   const filtered = payments.filter(p => p.year === year);
   const total = filtered.reduce((s, p) => s + p.amount, 0);
@@ -348,21 +402,10 @@ function aggregateByYear(payments, year) {
     c.payments.push(p);
     c.totalAmount += p.amount;
   });
-  // Кассы
   const cash = { cash: { amount: 0, count: 0 }, term: { amount: 0, count: 0 }, erip: { amount: 0, count: 0 }, other: { amount: 0, count: 0 } };
-  filtered.forEach(p => {
-    const t = getCashType(p.cashbox);
-    cash[t].amount += p.amount; cash[t].count++;
-  });
-  return {
-    year, payments: filtered,
-    totalRevenue: total,
-    paymentCount: filtered.length,
-    clientCount: byClient.size,
-    avgCheck: filtered.length ? total / filtered.length : 0,
-    avgPerClient: byClient.size ? total / byClient.size : 0,
-    byClient, cash
-  };
+  filtered.forEach(p => { const t = getCashType(p.cashbox); cash[t].amount += p.amount; cash[t].count++; });
+  return { year, payments: filtered, totalRevenue: total, paymentCount: filtered.length, clientCount: byClient.size,
+    avgCheck: filtered.length ? total / filtered.length : 0, avgPerClient: byClient.size ? total / byClient.size : 0, byClient, cash };
 }
 
 function clientStatus(key, agg25, agg26) {
@@ -385,7 +428,6 @@ function buildClientsTable(agg25, agg26) {
     const dates25 = c25 ? c25.payments.map(p => p.date) : [];
     const dates26 = c26 ? c26.payments.map(p => p.date) : [];
     const firstSeen = [...dates25, ...dates26].sort()[0];
-    // Доминирующая касса в 2026 (или 2025 для не вернувшихся)
     const refC = c26 || c25;
     const cashCount = {};
     refC.payments.forEach(p => { const t = getCashType(p.cashbox); cashCount[t] = (cashCount[t] || 0) + 1; });
@@ -394,14 +436,12 @@ function buildClientsTable(agg25, agg26) {
     if (cashTypes.length === 1) cash = cashTypes[0];
     else { const max = Math.max(...Object.values(cashCount)); cash = cashTypes.find(t => cashCount[t] === max); if (cashTypes.length > 1) cash = 'mixed-' + cash; }
     rows.push({
-      key,
-      client: [...useC.originalNames].sort((a,b)=>b.length-a.length)[0],
-      amount25: c25 ? c25.totalAmount : 0,
-      amount26: c26 ? c26.totalAmount : 0,
+      key, client: [...useC.originalNames].sort((a,b)=>b.length-a.length)[0],
+      amount25: c25 ? c25.totalAmount : 0, amount26: c26 ? c26.totalAmount : 0,
       delta: (c26 ? c26.totalAmount : 0) - (c25 ? c25.totalAmount : 0),
-      payments25: c25 ? c25.payments.length : 0,
-      payments26: c26 ? c26.payments.length : 0,
-      status, firstSeen, cash, cashCount
+      payments25: c25 ? c25.payments.length : 0, payments26: c26 ? c26.payments.length : 0,
+      status, firstSeen, cash, cashCount,
+      _c25: c25, _c26: c26
     });
   });
   return rows;
@@ -410,25 +450,21 @@ function buildClientsTable(agg25, agg26) {
 function renderKPI(agg25, agg26) {
   const cur = STATE.view === '2025' ? agg25 : agg26;
   const prev = STATE.view === '2025' ? null : agg25;
-
   const deltaRev = prev ? ((cur.totalRevenue - prev.totalRevenue) / prev.totalRevenue * 100) : null;
   const deltaCl = prev ? ((cur.clientCount - prev.clientCount) / prev.clientCount * 100) : null;
   const deltaPay = prev ? ((cur.paymentCount - prev.paymentCount) / prev.paymentCount * 100) : null;
   const deltaCheck = prev ? ((cur.avgCheck - prev.avgCheck) / prev.avgCheck * 100) : null;
-
   let retention = null;
   if (STATE.view === '2026' || STATE.view === 'compare') {
     const returned = [...agg25.byClient.keys()].filter(k => agg26.byClient.has(k)).length;
     retention = agg25.byClient.size ? (returned / agg25.byClient.size * 100) : 0;
   }
-
   const deltaHTML = (d) => {
     if (d === null) return '';
     const cls = d > 0.5 ? 'up' : (d < -0.5 ? 'down' : 'neutral');
     const sym = d > 0.5 ? '↑' : (d < -0.5 ? '↓' : '·');
     return '<span class="kpi-delta ' + cls + '">' + sym + ' ' + (d>0?'+':'') + d.toFixed(1) + '% к 2025</span>';
   };
-
   document.getElementById('kpi-grid').innerHTML =
     '<div class="kpi accent"><div class="kpi-label">Выручка</div><div class="kpi-value">' + fmt(cur.totalRevenue, 0) + '</div><div class="kpi-sub">руб · ' + STATE.view + '</div>' + deltaHTML(deltaRev) + '</div>' +
     '<div class="kpi"><div class="kpi-label">Оплат</div><div class="kpi-value">' + cur.paymentCount + '</div><div class="kpi-sub">платежей принято</div>' + deltaHTML(deltaPay) + '</div>' +
@@ -439,41 +475,22 @@ function renderKPI(agg25, agg26) {
 
 let chartDyn = null;
 function renderDynamics(agg25, agg26) {
-  const byDate = (payments) => {
-    const m = new Map();
-    payments.forEach(p => { const d = p.date.slice(5); m.set(d, (m.get(d) || 0) + p.amount); });
-    return m;
-  };
+  const byDate = (payments) => { const m = new Map(); payments.forEach(p => { const d = p.date.slice(5); m.set(d, (m.get(d) || 0) + p.amount); }); return m; };
   const m25 = byDate(agg25.payments); const m26 = byDate(agg26.payments);
   const allDates = [...new Set([...m25.keys(), ...m26.keys()])].sort();
-  const data25 = allDates.map(d => m25.get(d) || 0);
-  const data26 = allDates.map(d => m26.get(d) || 0);
-
   const showBoth = STATE.view === 'compare';
   const datasets = [];
-  if (STATE.view === '2025' || showBoth) {
-    datasets.push({ label: '2025', data: data25, borderColor: '#0A0A0A', backgroundColor: 'rgba(10,10,10,0.06)', tension: 0.25, fill: showBoth, borderWidth: 2, pointRadius: 2, pointHoverRadius: 5 });
-  }
-  if (STATE.view === '2026' || showBoth) {
-    datasets.push({ label: '2026', data: data26, borderColor: '#FFD400', backgroundColor: 'rgba(255,212,0,0.18)', tension: 0.25, fill: true, borderWidth: 3, pointRadius: 2, pointHoverRadius: 5, pointBackgroundColor: '#0A0A0A', pointBorderColor: '#FFD400' });
-  }
-
+  if (STATE.view === '2025' || showBoth) datasets.push({ label: '2025', data: allDates.map(d => m25.get(d) || 0), borderColor: '#0A0A0A', backgroundColor: 'rgba(10,10,10,0.06)', tension: 0.25, fill: showBoth, borderWidth: 2, pointRadius: 2, pointHoverRadius: 5 });
+  if (STATE.view === '2026' || showBoth) datasets.push({ label: '2026', data: allDates.map(d => m26.get(d) || 0), borderColor: '#FFD400', backgroundColor: 'rgba(255,212,0,0.18)', tension: 0.25, fill: true, borderWidth: 3, pointRadius: 2, pointHoverRadius: 5, pointBackgroundColor: '#0A0A0A', pointBorderColor: '#FFD400' });
   if (chartDyn) chartDyn.destroy();
   chartDyn = new Chart(document.getElementById('chart-dynamics'), {
     type: 'line',
     data: { labels: allDates.map(d => {const [m,dd] = d.split('-'); return dd+'.'+m;}), datasets },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      interaction: { intersect: false, mode: 'index' },
-      plugins: {
-        legend: { display: showBoth, position: 'top', align: 'end', labels: { font: { family: 'Manrope', size: 12, weight: '600' }, boxWidth: 14, boxHeight: 14 } },
-        tooltip: { backgroundColor: '#0A0A0A', titleFont: {family:'Manrope', weight:'600'}, bodyFont:{family:'JetBrains Mono'}, callbacks: { label: (c) => c.dataset.label + ': ' + fmt(c.parsed.y) + ' р' } }
-      },
-      scales: {
-        x: { grid: { display: false }, ticks: { font: { family: 'JetBrains Mono', size: 10 }, color: '#6B6B6B', maxRotation: 0, autoSkip: true, maxTicksLimit: 14 } },
-        y: { grid: { color: '#E8E7E0', drawBorder: false }, ticks: { font: { family: 'JetBrains Mono', size: 11 }, color: '#6B6B6B', callback: (v) => fmt(v) + ' р' } }
-      }
-    }
+    options: { responsive: true, maintainAspectRatio: false, interaction: { intersect: false, mode: 'index' },
+      plugins: { legend: { display: showBoth, position: 'top', align: 'end', labels: { font: { family: 'Manrope', weight: '600' } } },
+        tooltip: { backgroundColor: '#0A0A0A', titleFont: {family:'Manrope', weight:'600'}, bodyFont:{family:'JetBrains Mono'}, callbacks: { label: (c) => c.dataset.label + ': ' + fmt(c.parsed.y) + ' р' } } },
+      scales: { x: { grid: { display: false }, ticks: { font: { family: 'JetBrains Mono', size: 10 }, color: '#6B6B6B', maxRotation: 0, autoSkip: true, maxTicksLimit: 14 } },
+        y: { grid: { color: '#E8E7E0' }, ticks: { font: { family: 'JetBrains Mono', size: 11 }, color: '#6B6B6B', callback: (v) => fmt(v) + ' р' } } } }
   });
   document.getElementById('dyn-meta').textContent = STATE.view === 'compare' ? '2025 + 2026' : STATE.view;
 }
@@ -484,9 +501,7 @@ function renderCash(agg25, agg26) {
   const total = cur.cash.cash.amount + cur.cash.term.amount + cur.cash.erip.amount + cur.cash.other.amount;
   const types = ['cash', 'term', 'erip'];
   const cssMap = { cash: 'cash-cash', term: 'cash-term', erip: 'cash-erip' };
-
   document.getElementById('cash-meta').textContent = STATE.view === 'compare' ? '2026 vs 2025' : STATE.view + ' год';
-
   document.getElementById('cash-grid').innerHTML = types.map(t => {
     const c = cur.cash[t];
     const pct = total ? (c.amount / total * 100) : 0;
@@ -498,80 +513,91 @@ function renderCash(agg25, agg26) {
       const sym = dp > 0.5 ? '↑' : (dp < -0.5 ? '↓' : '·');
       compare = '<div class="compare">было <strong>' + prevPct.toFixed(0) + '%</strong> в 2025 · ' + sym + ' ' + (dp>0?'+':'') + dp.toFixed(1) + ' п.п.</div>';
     }
-    return '<div class="cash-card ' + cssMap[t] + '">' +
-      '<div class="label">' + CASH_LABELS[t] + '</div>' +
-      '<div class="val">' + fmt(c.amount, 0) + '</div>' +
-      '<div class="pct">' + pct.toFixed(0) + '% выручки · ' + c.count + ' опл</div>' +
-      compare + '</div>';
+    return '<div class="cash-card ' + cssMap[t] + '"><div class="label">' + CASH_LABELS[t] + '</div><div class="val">' + fmt(c.amount, 0) + '</div><div class="pct">' + pct.toFixed(0) + '% выручки · ' + c.count + ' опл</div>' + compare + '</div>';
   }).join('');
 }
 
 function renderCohorts(agg25, agg26) {
   const inBoth = [...agg25.byClient.keys()].filter(k => agg26.byClient.has(k));
-  const only25 = [...agg25.byClient.keys()].filter(k => !agg26.byClient.has(k));
   const only26 = [...agg26.byClient.keys()].filter(k => !agg25.byClient.has(k));
-
-  // когорта "с 2025" — те кто впервые появился в 2025
-  const coh25 = { keys: [...agg25.byClient.keys()] };
-  coh25.size = coh25.keys.length;
+  const coh25 = {};
+  coh25.size = agg25.byClient.size;
   coh25.returned = inBoth.length;
   coh25.retention = coh25.size ? (coh25.returned / coh25.size * 100) : 0;
   coh25.totalRev26 = inBoth.reduce((s,k) => s + (agg26.byClient.get(k)?.totalAmount || 0), 0);
   coh25.avgPay26 = coh25.returned ? inBoth.reduce((s,k) => s + (agg26.byClient.get(k)?.payments.length || 0), 0) / coh25.returned : 0;
   coh25.avgSum26 = coh25.returned ? coh25.totalRev26 / coh25.returned : 0;
-
-  // когорта "новые 2026"
-  const coh26 = { keys: only26 };
+  const coh26 = {};
   coh26.size = only26.length;
   coh26.totalRev = only26.reduce((s,k) => s + (agg26.byClient.get(k)?.totalAmount || 0), 0);
   coh26.avgPay = coh26.size ? only26.reduce((s,k) => s + (agg26.byClient.get(k)?.payments.length || 0), 0) / coh26.size : 0;
   coh26.avgSum = coh26.size ? coh26.totalRev / coh26.size : 0;
-
   document.getElementById('cohort-grid').innerHTML =
-    '<div class="cohort-card">' +
-      '<div class="badge">с 2025</div>' +
-      '<div class="name">Старая когорта</div>' +
-      '<div class="desc">Покупали майский в 2025. Размер: ' + coh25.size + ' клиентов</div>' +
-      '<div class="cohort-stats">' +
-        '<div class="cohort-stat"><div class="lbl">Удержание</div><div class="val">' + coh25.retention.toFixed(0) + '%</div><div class="ext">' + coh25.returned + ' вернулись в 2026</div></div>' +
-        '<div class="cohort-stat"><div class="lbl">Выручка 2026</div><div class="val">' + fmt(coh25.totalRev26, 0) + '</div><div class="ext">руб от этой когорты</div></div>' +
-        '<div class="cohort-stat"><div class="lbl">Ср. чек на клиента</div><div class="val">' + fmt(coh25.avgSum26, 0) + '</div><div class="ext">руб в 2026</div></div>' +
-        '<div class="cohort-stat"><div class="lbl">Ср. абонементов</div><div class="val">' + coh25.avgPay26.toFixed(1) + '</div><div class="ext">шт у вернувшихся</div></div>' +
-      '</div>' +
-    '</div>' +
-    '<div class="cohort-card fresh">' +
-      '<div class="badge">новые 2026</div>' +
-      '<div class="name">Свежая когорта</div>' +
-      '<div class="desc">Впервые купили майский в 2026. Размер: ' + coh26.size + ' клиентов</div>' +
-      '<div class="cohort-stats">' +
-        '<div class="cohort-stat"><div class="lbl">Доля базы 2026</div><div class="val">' + (agg26.byClient.size ? (coh26.size / agg26.byClient.size * 100).toFixed(0) : 0) + '%</div><div class="ext">от всех клиентов 26</div></div>' +
-        '<div class="cohort-stat"><div class="lbl">Выручка 2026</div><div class="val">' + fmt(coh26.totalRev, 0) + '</div><div class="ext">руб от новых</div></div>' +
-        '<div class="cohort-stat"><div class="lbl">Ср. чек на клиента</div><div class="val">' + fmt(coh26.avgSum, 0) + '</div><div class="ext">руб</div></div>' +
-        '<div class="cohort-stat"><div class="lbl">Ср. абонементов</div><div class="val">' + coh26.avgPay.toFixed(1) + '</div><div class="ext">шт у новых</div></div>' +
-      '</div>' +
+    '<div class="cohort-card"><div class="badge">с 2025</div><div class="name">Старая когорта</div><div class="desc">Покупали майский в 2025. Размер: ' + coh25.size + ' клиентов</div><div class="cohort-stats">' +
+      '<div class="cohort-stat"><div class="lbl">Удержание</div><div class="val">' + coh25.retention.toFixed(0) + '%</div><div class="ext">' + coh25.returned + ' вернулись в 2026</div></div>' +
+      '<div class="cohort-stat"><div class="lbl">Выручка 2026</div><div class="val">' + fmt(coh25.totalRev26, 0) + '</div><div class="ext">руб от этой когорты</div></div>' +
+      '<div class="cohort-stat"><div class="lbl">Ср. чек на клиента</div><div class="val">' + fmt(coh25.avgSum26, 0) + '</div><div class="ext">руб в 2026</div></div>' +
+      '<div class="cohort-stat"><div class="lbl">Ср. абонементов</div><div class="val">' + coh25.avgPay26.toFixed(1) + '</div><div class="ext">шт у вернувшихся</div></div></div></div>' +
+    '<div class="cohort-card fresh"><div class="badge">новые 2026</div><div class="name">Свежая когорта</div><div class="desc">Впервые купили в 2026. Размер: ' + coh26.size + ' клиентов</div><div class="cohort-stats">' +
+      '<div class="cohort-stat"><div class="lbl">Доля базы 2026</div><div class="val">' + (agg26.byClient.size ? (coh26.size / agg26.byClient.size * 100).toFixed(0) : 0) + '%</div><div class="ext">от всех клиентов 26</div></div>' +
+      '<div class="cohort-stat"><div class="lbl">Выручка 2026</div><div class="val">' + fmt(coh26.totalRev, 0) + '</div><div class="ext">руб от новых</div></div>' +
+      '<div class="cohort-stat"><div class="lbl">Ср. чек на клиента</div><div class="val">' + fmt(coh26.avgSum, 0) + '</div><div class="ext">руб</div></div>' +
+      '<div class="cohort-stat"><div class="lbl">Ср. абонементов</div><div class="val">' + coh26.avgPay.toFixed(1) + '</div><div class="ext">шт у новых</div></div></div></div>';
+}
+
+function renderCourses(agg25, agg26) {
+  const cur = STATE.view === '2025' ? agg25 : agg26;
+  const has = hasCourseField(cur.payments);
+  if (!has) {
+    document.getElementById('courses-meta').textContent = 'нет данных';
+    document.getElementById('courses-body').innerHTML = '<div class="courses-empty">' +
+      '<div class="icon">○</div>' +
+      '<h3>Разрез по курсам не активирован</h3>' +
+      '<p>Чтобы увидеть выручку по конкретным курсам (Финграмотность, 3D Unity, Roblox, Мир логики, 7 навыков и т.д.), нужны данные с привязкой каждого платежа к группе/абонементу.</p>' +
+      '<details><summary>Как добавить эти данные</summary><ol>' +
+        '<li>В AlphaCRM в выгрузке платежей добавить колонку <code>Абонемент</code> или <code>Группа</code> (название курса).</li>' +
+        '<li>Сохранить файл с тем же названием и структурой, как обычно.</li>' +
+        '<li>В этом дашборде нажать <code>↑ Загрузить Excel</code> — блок автоматически активируется.</li>' +
+        '<li>Альтернатива — подключить AlphaCRM API через GAS, тогда курсы будут тянуться автоматически (см. README).</li>' +
+      '</ol></details>' +
     '</div>';
+    return;
+  }
+  // Группируем по курсу
+  const byCourse = new Map();
+  cur.payments.forEach(p => {
+    const c = String(p.course || '').trim() || '— без курса —';
+    if (!byCourse.has(c)) byCourse.set(c, { name: c, amount: 0, count: 0, clients: new Set() });
+    const r = byCourse.get(c);
+    r.amount += p.amount; r.count++; r.clients.add(normalizeName(p.client).key);
+  });
+  const sorted = [...byCourse.values()].sort((a,b) => b.amount - a.amount);
+  const max = sorted[0] ? sorted[0].amount : 1;
+  const total = sorted.reduce((s,r) => s+r.amount, 0) || 1;
+  document.getElementById('courses-meta').textContent = sorted.length + ' курсов · ' + STATE.view + ' год';
+  document.getElementById('courses-body').innerHTML = '<div class="seg-list">' + sorted.map(r => {
+    const pct = r.amount / max * 100;
+    return '<div class="seg-row" style="grid-template-columns: 240px 1fr 100px 100px;">' +
+      '<div class="seg-name">' + r.name + '<div style="font-size:10px;color:var(--gray-2);font-family:JetBrains Mono;">' + r.clients.size + ' клиентов · ' + r.count + ' оплат</div></div>' +
+      '<div class="seg-bar-wrap"><div class="seg-bar" style="width:' + pct + '%"></div></div>' +
+      '<div class="seg-amt">' + fmt(r.amount, 0) + ' р</div>' +
+      '<div class="seg-pct">' + (r.amount/total*100).toFixed(0) + '% выручки</div>' +
+    '</div>';
+  }).join('') + '</div>';
 }
 
 function renderSegments(agg25, agg26) {
   const segData = SEGMENTS.map(s => ({ ...s, count25: 0, total25: 0, count26: 0, total26: 0 }));
   agg25.payments.forEach(p => { const seg = SEGMENTS.findIndex(s => p.amount >= s.min && p.amount <= s.max); if (seg >= 0) { segData[seg].count25++; segData[seg].total25 += p.amount; } });
   agg26.payments.forEach(p => { const seg = SEGMENTS.findIndex(s => p.amount >= s.min && p.amount <= s.max); if (seg >= 0) { segData[seg].count26++; segData[seg].total26 += p.amount; } });
-
   const showField = STATE.view === '2025' ? 'total25' : 'total26';
   const countField = STATE.view === '2025' ? 'count25' : 'count26';
   const maxV = Math.max(...segData.map(s => s[showField])) || 1;
   const totalSum = segData.reduce((a,b)=>a+b[showField],0) || 1;
-
   document.getElementById('seg-by-amount').innerHTML = segData.map(s => {
     const pct = s[showField] / maxV * 100;
-    return '<div class="seg-row">' +
-      '<div class="seg-name">' + s.label + '<div style="font-size:10px;color:var(--gray-2);font-family:JetBrains Mono;">' + s.note + '</div></div>' +
-      '<div class="seg-bar-wrap"><div class="seg-bar" style="width:' + pct + '%"></div></div>' +
-      '<div class="seg-amt">' + fmt(s[showField]) + ' р</div>' +
-      '<div class="seg-pct">' + s[countField] + ' опл · ' + (s[showField]/totalSum*100).toFixed(0) + '%</div>' +
-    '</div>';
+    return '<div class="seg-row"><div class="seg-name">' + s.label + '<div style="font-size:10px;color:var(--gray-2);font-family:JetBrains Mono;">' + s.note + '</div></div><div class="seg-bar-wrap"><div class="seg-bar" style="width:' + pct + '%"></div></div><div class="seg-amt">' + fmt(s[showField]) + ' р</div><div class="seg-pct">' + s[countField] + ' опл · ' + (s[showField]/totalSum*100).toFixed(0) + '%</div></div>';
   }).join('');
-
   const counts = STATE.view === '2025' ? agg25 : agg26;
   const bucketsMap = new Map();
   counts.byClient.forEach((c) => { const n = c.payments.length; const key = n >= 4 ? '4+' : String(n); bucketsMap.set(key, (bucketsMap.get(key) || 0) + 1); });
@@ -581,86 +607,114 @@ function renderSegments(agg25, agg26) {
   document.getElementById('seg-by-count').innerHTML = order.map(k => {
     const n = bucketsMap.get(k) || 0;
     const pct = n / maxC * 100;
-    return '<div class="seg-row">' +
-      '<div class="seg-name">' + k + ' абонемент' + (k==='1'?'':'а') + '<div style="font-size:10px;color:var(--gray-2);font-family:JetBrains Mono;">на одного клиента</div></div>' +
-      '<div class="seg-bar-wrap"><div class="seg-bar alt" style="width:' + pct + '%"></div></div>' +
-      '<div class="seg-amt">' + n + '</div>' +
-      '<div class="seg-pct">' + (n / totalClients * 100).toFixed(0) + '% базы</div>' +
-    '</div>';
+    return '<div class="seg-row"><div class="seg-name">' + k + ' абонемент' + (k==='1'?'':'а') + '<div style="font-size:10px;color:var(--gray-2);font-family:JetBrains Mono;">на одного клиента</div></div><div class="seg-bar-wrap"><div class="seg-bar alt" style="width:' + pct + '%"></div></div><div class="seg-amt">' + n + '</div><div class="seg-pct">' + (n / totalClients * 100).toFixed(0) + '% базы</div></div>';
   }).join('');
 }
 
+let CACHED_ROWS = [];
 function renderClients(agg25, agg26) {
-  const rows = buildClientsTable(agg25, agg26);
-  const cntAll = rows.length;
-  const cntRet = rows.filter(r => r.status === 'returning').length;
-  const cntNew = rows.filter(r => r.status === 'new').length;
-  const cntLost = rows.filter(r => r.status === 'lost').length;
+  CACHED_ROWS = buildClientsTable(agg25, agg26);
+  const cntAll = CACHED_ROWS.length;
   document.getElementById('cnt-all').textContent = cntAll;
-  document.getElementById('cnt-returning').textContent = cntRet;
-  document.getElementById('cnt-new').textContent = cntNew;
-  document.getElementById('cnt-lost').textContent = cntLost;
-
-  let filtered = rows;
+  document.getElementById('cnt-returning').textContent = CACHED_ROWS.filter(r => r.status === 'returning').length;
+  document.getElementById('cnt-new').textContent = CACHED_ROWS.filter(r => r.status === 'new').length;
+  document.getElementById('cnt-lost').textContent = CACHED_ROWS.filter(r => r.status === 'lost').length;
+  let filtered = CACHED_ROWS;
   if (STATE.statusFilter !== 'all') filtered = filtered.filter(r => r.status === STATE.statusFilter);
-  if (STATE.search) {
-    const q = STATE.search.toLowerCase();
-    filtered = filtered.filter(r => r.client.toLowerCase().includes(q));
-  }
-
+  if (STATE.search) { const q = STATE.search.toLowerCase(); filtered = filtered.filter(r => r.client.toLowerCase().includes(q)); }
   const k = STATE.sortKey, d = STATE.sortDir === 'desc' ? -1 : 1;
-  filtered.sort((a,b) => {
-    let av = a[k], bv = b[k];
-    if (typeof av === 'string') return av.localeCompare(bv) * d;
-    return ((av || 0) - (bv || 0)) * d;
-  });
+  filtered.sort((a,b) => { let av = a[k], bv = b[k]; if (typeof av === 'string') return av.localeCompare(bv) * d; return ((av || 0) - (bv || 0)) * d; });
+  STATE.drawerList = filtered.map(r => r.key);
   document.getElementById('clients-count').innerHTML = 'показано <strong>' + filtered.length + '</strong> из ' + cntAll;
-
-  if (!filtered.length) {
-    document.getElementById('clients-tbody').innerHTML = '<tr><td colspan="8"><div class="empty-state">Ничего не найдено</div></td></tr>';
-    return;
-  }
-
+  if (!filtered.length) { document.getElementById('clients-tbody').innerHTML = '<tr><td colspan="8" style="text-align:center;padding:60px;color:var(--gray-2)">Ничего не найдено</td></tr>'; return; }
   document.getElementById('clients-tbody').innerHTML = filtered.map(r => {
     const tagClass = r.status === 'returning' ? 'returning' : (r.status === 'new' ? 'new' : 'lost');
     const tagText = r.status === 'returning' ? 'вернулся' : (r.status === 'new' ? 'новый' : 'не вернулся');
     const cashType = r.cash.replace('mixed-','');
-    const cashClass = 'cash-' + cashType;
     const cashLabel = r.cash.startsWith('mixed-') ? CASH_LABELS[cashType] + '+' : CASH_LABELS[cashType];
     const deltaClass = r.delta > 0.5 ? 'delta-up' : (r.delta < -0.5 ? 'delta-down' : 'dim');
-    const deltaSym = r.delta > 0.5 ? '+' : '';
     const a25Str = r.amount25 ? fmt(r.amount25, 0) : '—';
     const a26Str = r.amount26 ? fmt(r.amount26, 0) : '—';
-    const deltaStr = (!r.amount25 || !r.amount26) ? '—' : deltaSym + fmt(r.delta, 0);
-    return '<tr>' +
+    const deltaStr = (!r.amount25 || !r.amount26) ? '—' : (r.delta > 0.5 ? '+' : '') + fmt(r.delta, 0);
+    return '<tr data-key="' + r.key + '">' +
       '<td>' + r.client + '</td>' +
       '<td class="num' + (r.amount25 ? '' : ' dim') + '">' + a25Str + '</td>' +
       '<td class="num' + (r.amount26 ? '' : ' dim') + '">' + a26Str + '</td>' +
       '<td class="num ' + (r.amount25 && r.amount26 ? deltaClass : 'dim') + '">' + deltaStr + '</td>' +
       '<td class="num' + (r.payments26 ? '' : ' dim') + '">' + (r.payments26 || '—') + '</td>' +
-      '<td><span class="tag ' + cashClass + '">' + cashLabel + '</span></td>' +
+      '<td><span class="tag cash-' + cashType + '">' + cashLabel + '</span></td>' +
       '<td class="mono" style="font-size:12px;color:var(--gray-2)">' + (r.firstSeen ? fmtDate(r.firstSeen) : '—') + '</td>' +
       '<td><span class="tag ' + tagClass + '">' + tagText + '</span></td>' +
     '</tr>';
   }).join('');
-
   document.querySelectorAll('table.clients th').forEach(th => {
-    const span = th.querySelector('.arr');
-    if (span) span.textContent = th.dataset.sort === k ? (d === -1 ? '↓' : '↑') : '';
+    const span = th.querySelector('.arr'); if (span) span.textContent = th.dataset.sort === k ? (d === -1 ? '↓' : '↑') : '';
   });
+  document.querySelectorAll('#clients-tbody tr').forEach(tr => {
+    tr.addEventListener('click', () => openDrawer(tr.dataset.key));
+  });
+}
+
+function openDrawer(key) {
+  const row = CACHED_ROWS.find(r => r.key === key);
+  if (!row) return;
+  STATE.drawerKey = key;
+  document.getElementById('drawer-name').textContent = row.client;
+  // тэги
+  const tagClass = row.status === 'returning' ? 'returning' : (row.status === 'new' ? 'new' : 'lost');
+  const tagText = row.status === 'returning' ? 'вернулся в 2026' : (row.status === 'new' ? 'новый клиент 2026' : 'не вернулся в 2026');
+  const cashType = row.cash.replace('mixed-','');
+  const cashLabel = row.cash.startsWith('mixed-') ? CASH_LABELS[cashType] + ' + др.' : CASH_LABELS[cashType];
+  document.getElementById('drawer-tags').innerHTML =
+    '<span class="tag ' + tagClass + '">' + tagText + '</span>' +
+    '<span class="tag cash-' + cashType + '">касса: ' + cashLabel + '</span>';
+  // stats
+  const totalAll = row.amount25 + row.amount26;
+  const deltaPct = row.amount25 ? ((row.amount26 - row.amount25) / row.amount25 * 100) : null;
+  document.getElementById('drawer-stats').innerHTML =
+    '<div class="drawer-stat accent"><div class="lbl">Всего за два года</div><div class="val">' + fmt(totalAll, 0) + '</div><div class="ext">руб · ' + (row.payments25 + row.payments26) + ' оплат</div></div>' +
+    '<div class="drawer-stat"><div class="lbl">Динамика 25→26</div><div class="val">' + (deltaPct !== null ? (deltaPct>0?'+':'') + deltaPct.toFixed(0) + '%' : '—') + '</div><div class="ext">' + (row.delta>0?'+':'') + fmt(row.delta, 0) + ' руб</div></div>' +
+    '<div class="drawer-stat"><div class="lbl">2025</div><div class="val">' + fmt(row.amount25, 0) + '</div><div class="ext">' + row.payments25 + ' оплат</div></div>' +
+    '<div class="drawer-stat"><div class="lbl">2026</div><div class="val">' + fmt(row.amount26, 0) + '</div><div class="ext">' + row.payments26 + ' оплат</div></div>';
+  // история
+  const renderYear = (yr, c) => {
+    if (!c) return '<div class="year-block empty"><div class="year-block-head">' + yr + ' <span class="total">— нет оплат</span></div><div class="empty-msg">' + (yr === 2025 ? 'Не покупал майский в 2025' : 'Не вернулся в 2026') + '</div></div>';
+    const sorted = [...c.payments].sort((a,b) => a.date.localeCompare(b.date));
+    return '<div class="year-block"><div class="year-block-head">' + yr + ' <span class="total">' + fmt(c.totalAmount, 0) + ' руб · ' + c.payments.length + ' опл</span></div>' +
+      sorted.map(p => '<div class="payment-row">' +
+        '<div class="date">' + fmtShortDate(p.date) + '</div>' +
+        '<div class="cashbox">' + (p.cashbox || '') + (p.course ? ' · <strong>' + p.course + '</strong>' : '') + '</div>' +
+        '<div></div>' +
+        '<div class="amount">' + fmt(p.amount, 0) + ' р</div>' +
+      '</div>').join('') + '</div>';
+  };
+  document.getElementById('drawer-history').innerHTML = renderYear(2025, row._c25) + renderYear(2026, row._c26);
+  // nav
+  const idx = STATE.drawerList.indexOf(key);
+  document.getElementById('drawer-prev').disabled = idx <= 0;
+  document.getElementById('drawer-next').disabled = idx >= STATE.drawerList.length - 1;
+  // show
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawer-backdrop').classList.add('open');
+}
+
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawer-backdrop').classList.remove('open');
+  STATE.drawerKey = null;
 }
 
 function render() {
   const agg25 = aggregateByYear(STATE.data.payments, 2025);
   const agg26 = aggregateByYear(STATE.data.payments, 2026);
   const sub = document.getElementById('period-subtitle');
-  if (STATE.view === 'compare') sub.textContent = 'Сравнение 2025 и 2026';
-  else sub.textContent = 'Майские абонементы ' + STATE.view + ' года';
+  sub.textContent = STATE.view === 'compare' ? 'Сравнение 2025 и 2026' : 'Майские абонементы ' + STATE.view + ' года';
   document.getElementById('data-info').textContent = STATE.data.payments.length + ' платежей · обновлено ' + STATE.data.meta.generated_at;
   renderKPI(agg25, agg26);
   renderDynamics(agg25, agg26);
   renderCash(agg25, agg26);
   renderCohorts(agg25, agg26);
+  renderCourses(agg25, agg26);
   renderSegments(agg25, agg26);
   renderClients(agg25, agg26);
 }
@@ -668,90 +722,94 @@ function render() {
 document.querySelectorAll('.year-tab').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.year-tab').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    STATE.view = btn.dataset.view;
-    render();
+    btn.classList.add('active'); STATE.view = btn.dataset.view; render();
   });
 });
-
 document.querySelectorAll('#status-filters .filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('#status-filters .filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    STATE.statusFilter = btn.dataset.status;
-    const agg25 = aggregateByYear(STATE.data.payments, 2025);
-    const agg26 = aggregateByYear(STATE.data.payments, 2026);
-    renderClients(agg25, agg26);
+    btn.classList.add('active'); STATE.statusFilter = btn.dataset.status;
+    renderClients(aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
   });
 });
-
 document.getElementById('search').addEventListener('input', (e) => {
   STATE.search = e.target.value.trim();
-  const agg25 = aggregateByYear(STATE.data.payments, 2025);
-  const agg26 = aggregateByYear(STATE.data.payments, 2026);
-  renderClients(agg25, agg26);
+  renderClients(aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
 });
-
 document.querySelectorAll('table.clients th').forEach(th => {
   th.addEventListener('click', () => {
     const k = th.dataset.sort;
     if (STATE.sortKey === k) STATE.sortDir = STATE.sortDir === 'desc' ? 'asc' : 'desc';
     else { STATE.sortKey = k; STATE.sortDir = 'desc'; }
-    const agg25 = aggregateByYear(STATE.data.payments, 2025);
-    const agg26 = aggregateByYear(STATE.data.payments, 2026);
-    renderClients(agg25, agg26);
+    renderClients(aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
   });
+});
+
+// Drawer events
+document.getElementById('drawer-close').addEventListener('click', closeDrawer);
+document.getElementById('drawer-backdrop').addEventListener('click', closeDrawer);
+document.getElementById('drawer-prev').addEventListener('click', () => {
+  const idx = STATE.drawerList.indexOf(STATE.drawerKey);
+  if (idx > 0) openDrawer(STATE.drawerList[idx - 1]);
+});
+document.getElementById('drawer-next').addEventListener('click', () => {
+  const idx = STATE.drawerList.indexOf(STATE.drawerKey);
+  if (idx < STATE.drawerList.length - 1) openDrawer(STATE.drawerList[idx + 1]);
+});
+document.addEventListener('keydown', (e) => {
+  if (!document.getElementById('drawer').classList.contains('open')) return;
+  if (e.key === 'Escape') closeDrawer();
+  if (e.key === 'ArrowLeft') document.getElementById('drawer-prev').click();
+  if (e.key === 'ArrowRight') document.getElementById('drawer-next').click();
 });
 
 document.getElementById('btn-load-excel').addEventListener('click', () => document.getElementById('file-input').click());
 document.getElementById('file-input').addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
+  const file = e.target.files[0]; if (!file) return;
   const reader = new FileReader();
   reader.onload = (ev) => {
     try {
       const wb = XLSX.read(new Uint8Array(ev.target.result), { type: 'array', cellDates: true });
       const newPayments = [];
+      // авто-определение колонки с курсом
+      const COURSE_COLS = ['Абонемент','Группа','Курс','Course','Group','group_name','Название группы'];
       ['2025','2026'].forEach(sheetName => {
         if (!wb.Sheets[sheetName]) return;
         const rows = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], { raw: false });
+        const headers = rows.length ? Object.keys(rows[0]) : [];
+        const courseCol = COURSE_COLS.find(c => headers.includes(c));
         rows.forEach(row => {
           const comm = row['Комментарий'] || '';
           if (sheetName === '2026' || (comm && /май|мйа/i.test(comm) && !/перенес|перевел|перенос|перевод|вернули/i.test(comm))) {
             let dateStr = row['Дата'];
             if (dateStr) {
-              if (/^\d{2}\.\d{2}\.\d{4}/.test(dateStr)) {
-                const [d,m,y] = dateStr.split(' ')[0].split('.');
-                dateStr = y + '-' + m + '-' + d;
-              } else { dateStr = new Date(dateStr).toISOString().slice(0,10); }
+              if (/^\d{2}\.\d{2}\.\d{4}/.test(dateStr)) { const [d,m,y] = dateStr.split(' ')[0].split('.'); dateStr = y + '-' + m + '-' + d; }
+              else { dateStr = new Date(dateStr).toISOString().slice(0,10); }
             }
             newPayments.push({
               date: dateStr, client: row['Клиент'] || '',
               amount: parseFloat(row['Сумма']) || 0,
               cashbox: row['Счет (касса)'] || '',
-              comment: comm, year: parseInt(sheetName)
+              comment: comm,
+              course: courseCol ? (row[courseCol] || '') : '',
+              year: parseInt(sheetName)
             });
           }
         });
       });
       STATE.data = { meta: { generated_at: new Date().toISOString().slice(0,10), source: file.name, years: [2025, 2026] }, payments: newPayments };
       render();
-      alert('Загружено ' + newPayments.length + ' платежей из ' + file.name);
+      const haveCourses = hasCourseField(newPayments);
+      alert('Загружено ' + newPayments.length + ' платежей из ' + file.name + (haveCourses ? '\n\n✓ Найдена колонка с курсами — разрез по курсам активирован.' : '\n\n(Колонки с курсом не обнаружено)'));
     } catch (err) { alert('Ошибка чтения файла: ' + err.message); }
   };
   reader.readAsArrayBuffer(file);
 });
 
 document.getElementById('btn-load-api').addEventListener('click', async () => {
-  if (!API_ENDPOINT) {
-    alert('AlphaCRM API ещё не подключён.\n\nЧтобы подключить:\n1. Развернуть Google Apps Script с doGet → fetch к proznanie4eee.s20.online/v2api/2/pay/index\n2. Прописать URL в константе API_ENDPOINT.');
-    return;
-  }
-  try {
-    const r = await fetch(API_ENDPOINT); const j = await r.json();
-    STATE.data = j; render();
-    document.getElementById('api-status').classList.add('connected');
-  } catch (err) { alert('Ошибка API: ' + err.message); }
+  if (!API_ENDPOINT) { alert('AlphaCRM API ещё не подключён. См. README по развёртыванию Google Apps Script.'); return; }
+  try { const r = await fetch(API_ENDPOINT); const j = await r.json(); STATE.data = j; render(); document.getElementById('api-status').classList.add('connected'); }
+  catch (err) { alert('Ошибка API: ' + err.message); }
 });
 
 document.getElementById('btn-export').addEventListener('click', () => {
@@ -760,16 +818,11 @@ document.getElementById('btn-export').addEventListener('click', () => {
   const rows = buildClientsTable(agg25, agg26);
   const csv = [
     'Клиент,Сумма 2025,Сумма 2026,Δ,Оплат 25,Оплат 26,Касса,Первое появление,Статус',
-    ...rows.map(r => [
-      '"' + r.client.replace(/"/g,'""') + '"',
-      r.amount25, r.amount26, r.delta, r.payments25, r.payments26,
-      CASH_LABELS[r.cash.replace('mixed-','')] || '', r.firstSeen || '', r.status
-    ].join(','))
+    ...rows.map(r => ['"' + r.client.replace(/"/g,'""') + '"', r.amount25, r.amount26, r.delta, r.payments25, r.payments26, CASH_LABELS[r.cash.replace('mixed-','')] || '', r.firstSeen || '', r.status].join(','))
   ].join('\n');
   const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'майские_клиенты_25_26.csv'; a.click();
+  const a = document.createElement('a'); a.href = url; a.download = 'майские_клиенты_25_26.csv'; a.click();
   URL.revokeObjectURL(url);
 });
 
