@@ -805,6 +805,8 @@ function closeDrawer() {
 
 function getAggs() {
   return {
+    22: aggregateByYear(STATE.data.payments, 2022),
+    23: aggregateByYear(STATE.data.payments, 2023),
     24: aggregateByYear(STATE.data.payments, 2024),
     25: aggregateByYear(STATE.data.payments, 2025),
     26: aggregateByYear(STATE.data.payments, 2026)
@@ -812,7 +814,7 @@ function getAggs() {
 }
 function render() {
   const aggs = getAggs();
-  const agg24 = aggs[24], agg25 = aggs[25], agg26 = aggs[26];
+  const agg22 = aggs[22], agg23 = aggs[23], agg24 = aggs[24], agg25 = aggs[25], agg26 = aggs[26];
   const sub = document.getElementById('period-subtitle');
   sub.textContent = STATE.view === 'compare' ? 'Сравнение 2024, 2025 и 2026' : 'Майские абонементы ' + STATE.view + ' года';
   document.getElementById('data-info').textContent = STATE.data.payments.length + ' платежей · обновлено ' + STATE.data.meta.generated_at;
@@ -953,10 +955,12 @@ document.getElementById('btn-load-api').addEventListener('click', async () => {
 });
 
 document.getElementById('btn-export').addEventListener('click', () => {
+  const agg22 = aggregateByYear(STATE.data.payments, 2022);
+  const agg23 = aggregateByYear(STATE.data.payments, 2023);
   const agg24 = aggregateByYear(STATE.data.payments, 2024);
   const agg25 = aggregateByYear(STATE.data.payments, 2025);
   const agg26 = aggregateByYear(STATE.data.payments, 2026);
-  const rows = buildClientsTable(agg24, agg25, agg26);
+  const rows = buildClientsTable(agg22, agg23, agg24, agg25, agg26);
   const csv = [
     'Клиент,Сумма 2022,Сумма 2023,Сумма 2024,Сумма 2025,Сумма 2026,Δ,Оплат 22,Оплат 23,Оплат 24,Оплат 25,Оплат 26,Касса,Первое появление,Статус',
     ...rows.map(r => ['"' + r.client.replace(/"/g,'""') + '"', r.amount22 || 0, r.amount23 || 0, r.amount24 || 0, r.amount25, r.amount26, r.delta, r.payments22 || 0, r.payments23 || 0, r.payments24 || 0, r.payments25, r.payments26, CASH_LABELS[r.cash.replace('mixed-','')] || '', r.firstSeen || '', r.status].join(','))
