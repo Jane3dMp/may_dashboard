@@ -302,9 +302,6 @@ footer.bottom code { background: var(--paper-2); padding: 2px 6px; font-family: 
             <th data-sort="amount22" style="text-align:right">2022 <span class="arr"></span></th>
             <th data-sort="amount23" style="text-align:right">2023 <span class="arr"></span></th>
             <th data-sort="amount24" style="text-align:right">2024 <span class="arr"></span></th>
-            <th data-sort="amount22" style="text-align:right">2022 <span class="arr"></span></th>
-            <th data-sort="amount23" style="text-align:right">2023 <span class="arr"></span></th>
-            <th data-sort="amount24" style="text-align:right">2024 <span class="arr"></span></th>
             <th data-sort="amount25" style="text-align:right">2025 <span class="arr"></span></th>
             <th data-sort="amount26" style="text-align:right">2026 <span class="arr"></span></th>
             <th data-sort="delta" style="text-align:right">Δ <span class="arr"></span></th>
@@ -514,10 +511,12 @@ function renderKPI(agg22, agg23, agg24, agg25, agg26) {
   const prevMap = { '2022': null, '2023': agg22, '2024': agg23, '2025': agg24, '2026': agg25 };
   const cur = aggMap[STATE.view] || agg26;
   const prev = prevMap[STATE.view] !== undefined ? prevMap[STATE.view] : agg25;
-  const deltaRev = prev ? ((cur.totalRevenue - prev.totalRevenue) / prev.totalRevenue * 100) : null;
-  const deltaCl = prev ? ((cur.clientCount - prev.clientCount) / prev.clientCount * 100) : null;
-  const deltaPay = prev ? ((cur.paymentCount - prev.paymentCount) / prev.paymentCount * 100) : null;
-  const deltaCheck = prev ? ((cur.avgCheck - prev.avgCheck) / prev.avgCheck * 100) : null;
+  // Не считаем дельту, если предыдущий год пуст (иначе NaN или Infinity)
+  const hasPrev = prev && prev.totalRevenue > 0;
+  const deltaRev = hasPrev ? ((cur.totalRevenue - prev.totalRevenue) / prev.totalRevenue * 100) : null;
+  const deltaCl = hasPrev && prev.clientCount > 0 ? ((cur.clientCount - prev.clientCount) / prev.clientCount * 100) : null;
+  const deltaPay = hasPrev && prev.paymentCount > 0 ? ((cur.paymentCount - prev.paymentCount) / prev.paymentCount * 100) : null;
+  const deltaCheck = hasPrev && prev.avgCheck > 0 ? ((cur.avgCheck - prev.avgCheck) / prev.avgCheck * 100) : null;
   let retention = null, retLabel = '', retSub = '';
   if (STATE.view === '2026' || STATE.view === 'compare') {
     const returned = [...agg25.byClient.keys()].filter(k => agg26.byClient.has(k)).length;
@@ -527,13 +526,13 @@ function renderKPI(agg22, agg23, agg24, agg25, agg26) {
     const returned = [...agg24.byClient.keys()].filter(k => agg25.byClient.has(k)).length;
     retention = agg24.byClient.size ? (returned / agg24.byClient.size * 100) : 0;
     retLabel = '24→25'; retSub = returned + ' из ' + agg24.byClient.size;
-  } else if (STATE.view === '2024') {
+  } else if (STATE.view === '2024' && agg23.byClient.size > 0) {
     const returned = [...agg23.byClient.keys()].filter(k => agg24.byClient.has(k)).length;
-    retention = agg23.byClient.size ? (returned / agg23.byClient.size * 100) : 0;
+    retention = (returned / agg23.byClient.size * 100);
     retLabel = '23→24'; retSub = returned + ' из ' + agg23.byClient.size;
-  } else if (STATE.view === '2023') {
+  } else if (STATE.view === '2023' && agg22.byClient.size > 0) {
     const returned = [...agg22.byClient.keys()].filter(k => agg23.byClient.has(k)).length;
-    retention = agg22.byClient.size ? (returned / agg22.byClient.size * 100) : 0;
+    retention = (returned / agg22.byClient.size * 100);
     retLabel = '22→23'; retSub = returned + ' из ' + agg22.byClient.size;
   }
   const deltaHTML = (d) => {
@@ -782,12 +781,15 @@ function openDrawer(key) {
     return '<div class="year-block"><div class="year-block-head">' + yr + ' <span class="total">' + fmt(c.totalAmount, 0) + ' руб · ' + c.payments.length + ' опл</span></div>' +
       sorted.map(p => '<div class="payment-row">' +
         '<div class="date">' + fmtShortDate(p.date) + '</div>' +
-        '<div class="cashbox">' + (p.cashbox || '') + (p.course ? ' · <strong>' + p.course + '</strong>' : '') + '</div>' +
+        '<div class="cashbox">' + (p.cashbox || '') + (p.course ? ' · <strong>' + p.course + '</strong>' : (p.year <= 2023 ? ' <span style="color:var(--gray-3);font-size:10px">· курс не сохранён</span>' : '')) + '</div>' +
         '<div></div>' +
         '<div class="amount">' + fmt(p.amount, 0) + ' р</div>' +
       '</div>').join('') + '</div>';
   };
-  document.getElementById('drawer-history').innerHTML = renderYear(2022, row._c22) + renderYear(2023, row._c23) + renderYear(2024, row._c24) + renderYear(2025, row._c25) + renderYear(2026, row._c26);
+  const courseHint = STATE.courseFilter
+    ? '<div style="font-size:11px;color:var(--gray-2);margin-bottom:12px;padding:8px 10px;background:var(--paper-2);border-left:3px solid var(--yellow)">Показаны <strong>все майские платежи</strong> клиента, не только на курсе «' + STATE.courseFilter + '». Статус «' + (row.status === 'new' ? 'новый' : row.status === 'returning' ? 'вернулся' : 'не вернулся') + '» — относительно этого курса.</div>'
+    : '';
+  document.getElementById('drawer-history').innerHTML = courseHint + renderYear(2022, row._c22) + renderYear(2023, row._c23) + renderYear(2024, row._c24) + renderYear(2025, row._c25) + renderYear(2026, row._c26);
   // nav
   const idx = STATE.drawerList.indexOf(key);
   document.getElementById('drawer-prev').disabled = idx <= 0;
