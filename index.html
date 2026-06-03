@@ -154,7 +154,7 @@ table.clients tbody tr:hover { background: var(--yellow-soft); }
 .drawer-name { font-family: 'Bebas Neue'; font-size: 36px; line-height: 1; letter-spacing: -0.01em; padding-right: 50px; }
 .drawer-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
 .drawer-body { padding: 24px 28px 60px; }
-.drawer-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px; }
+.drawer-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
 .drawer-stat { border: var(--border-thin); padding: 14px 16px; }
 .drawer-stat .lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gray-2); font-weight: 600; }
 .drawer-stat .val { font-family: 'Bebas Neue'; font-size: 32px; line-height: 1; margin-top: 4px; }
@@ -203,6 +203,8 @@ footer.bottom code { background: var(--paper-2); padding: 2px 6px; font-family: 
       <div class="subtitle" id="period-subtitle">Анализ продаж · сравнение 2025 и 2026</div>
     </div>
     <div class="controls">
+      <button class="year-tab" data-view="2024">2024</button>
+      <button class="year-tab" data-view="2024">2024</button>
       <button class="year-tab" data-view="2025">2025</button>
       <button class="year-tab active" data-view="2026">2026</button>
       <button class="year-tab" data-view="compare">сравнение</button>
@@ -296,6 +298,8 @@ footer.bottom code { background: var(--paper-2); padding: 2px 6px; font-family: 
         <thead>
           <tr>
             <th data-sort="client">Клиент <span class="arr"></span></th>
+            <th data-sort="amount24" style="text-align:right">2024 <span class="arr"></span></th>
+            <th data-sort="amount24" style="text-align:right">2024 <span class="arr"></span></th>
             <th data-sort="amount25" style="text-align:right">2025 <span class="arr"></span></th>
             <th data-sort="amount26" style="text-align:right">2026 <span class="arr"></span></th>
             <th data-sort="delta" style="text-align:right">Δ <span class="arr"></span></th>
@@ -426,14 +430,15 @@ function clientStatus(key, agg25, agg26) {
   return 'unknown';
 }
 
-function buildClientsTable(agg25, agg26) {
-  const all = new Set([...agg25.byClient.keys(), ...agg26.byClient.keys()]);
+function buildClientsTable(agg24, agg25, agg26) {
+  const all = new Set([...agg24.byClient.keys(), ...agg25.byClient.keys(), ...agg26.byClient.keys()]);
   const rows = [];
   const courseFilter = STATE.courseFilter;
   all.forEach(key => {
+    const c24 = agg24.byClient.get(key);
     const c25 = agg25.byClient.get(key);
     const c26 = agg26.byClient.get(key);
-    const useC = c26 || c25;
+    const useC = c26 || c25 || c24;
     // если фильтр по курсу — оставляем только платежи этого курса
     const filterPays = (c) => {
       if (!c) return null;
@@ -442,24 +447,32 @@ function buildClientsTable(agg25, agg26) {
       if (!filtered.length) return null;
       return { ...c, payments: filtered, totalAmount: filtered.reduce((s,p) => s + p.amount, 0) };
     };
+    const fc24 = filterPays(c24);
     const fc25 = filterPays(c25);
     const fc26 = filterPays(c26);
-    // если активен фильтр курса и клиент не учится на этом курсе — пропускаем
-    if (courseFilter && !fc25 && !fc26) return;
-    // статус: если фильтр по курсу — считаем по этому курсу, иначе общий
+    if (courseFilter && !fc24 && !fc25 && !fc26) return;
+    // статус: считаем относительно текущего "анкора" (по умолчанию 2026)
     let status;
     if (courseFilter) {
-      if (fc25 && fc26) status = 'returning';
-      else if (fc26) status = 'new';
-      else if (fc25) status = 'lost';
+      const inThisCourse24 = !!fc24, inThisCourse25 = !!fc25, inThisCourse26 = !!fc26;
+      // anchor — последний год где клиент есть
+      if (inThisCourse26 && (inThisCourse25 || inThisCourse24)) status = 'returning';
+      else if (inThisCourse26) status = 'new';
+      else if (inThisCourse25 && !inThisCourse26) status = 'lost';
+      else if (inThisCourse24 && !inThisCourse25 && !inThisCourse26) status = 'lost';
       else status = 'unknown';
     } else {
-      status = clientStatus(key, agg25, agg26);
+      const in24 = !!c24, in25 = !!c25, in26 = !!c26;
+      if (in26 && (in25 || in24)) status = 'returning';
+      else if (in26) status = 'new';
+      else if (in25 || in24) status = 'lost';
+      else status = 'unknown';
     }
-    const refC = fc26 || fc25 || useC;
+    const refC = fc26 || fc25 || fc24 || useC;
+    const dates24 = fc24 ? fc24.payments.map(p => p.date) : [];
     const dates25 = fc25 ? fc25.payments.map(p => p.date) : [];
     const dates26 = fc26 ? fc26.payments.map(p => p.date) : [];
-    const firstSeen = [...dates25, ...dates26].sort()[0] || ([...(c25?c25.payments.map(p=>p.date):[]), ...(c26?c26.payments.map(p=>p.date):[])].sort()[0]);
+    const firstSeen = [...dates24, ...dates25, ...dates26].sort()[0] || ([...(c24?c24.payments.map(p=>p.date):[]), ...(c25?c25.payments.map(p=>p.date):[]), ...(c26?c26.payments.map(p=>p.date):[])].sort()[0]);
     const cashCount = {};
     refC.payments.forEach(p => { const t = getCashType(p.cashbox); cashCount[t] = (cashCount[t] || 0) + 1; });
     const cashTypes = Object.keys(cashCount);
@@ -469,62 +482,75 @@ function buildClientsTable(agg25, agg26) {
     else { const max = Math.max(...Object.values(cashCount)); cash = cashTypes.find(t => cashCount[t] === max); if (cashTypes.length > 1) cash = 'mixed-' + cash; }
     rows.push({
       key, client: [...useC.originalNames].sort((a,b)=>b.length-a.length)[0],
-      amount25: fc25 ? fc25.totalAmount : 0, amount26: fc26 ? fc26.totalAmount : 0,
+      amount24: fc24 ? fc24.totalAmount : 0,
+      amount25: fc25 ? fc25.totalAmount : 0,
+      amount26: fc26 ? fc26.totalAmount : 0,
       delta: (fc26 ? fc26.totalAmount : 0) - (fc25 ? fc25.totalAmount : 0),
-      payments25: fc25 ? fc25.payments.length : 0, payments26: fc26 ? fc26.payments.length : 0,
+      payments24: fc24 ? fc24.payments.length : 0,
+      payments25: fc25 ? fc25.payments.length : 0,
+      payments26: fc26 ? fc26.payments.length : 0,
       status, firstSeen, cash, cashCount,
-      _c25: fc25 || c25, _c26: fc26 || c26
+      _c24: fc24 || c24, _c25: fc25 || c25, _c26: fc26 || c26
     });
   });
   return rows;
 }
 
-function renderKPI(agg25, agg26) {
-  const cur = STATE.view === '2025' ? agg25 : agg26;
-  const prev = STATE.view === '2025' ? null : agg25;
+function renderKPI(agg24, agg25, agg26) {
+  const aggMap = { '2024': agg24, '2025': agg25, '2026': agg26 };
+  const prevMap = { '2024': null, '2025': agg24, '2026': agg25 };
+  const cur = aggMap[STATE.view] || agg26;
+  const prev = prevMap[STATE.view] !== undefined ? prevMap[STATE.view] : agg25;
   const deltaRev = prev ? ((cur.totalRevenue - prev.totalRevenue) / prev.totalRevenue * 100) : null;
   const deltaCl = prev ? ((cur.clientCount - prev.clientCount) / prev.clientCount * 100) : null;
   const deltaPay = prev ? ((cur.paymentCount - prev.paymentCount) / prev.paymentCount * 100) : null;
   const deltaCheck = prev ? ((cur.avgCheck - prev.avgCheck) / prev.avgCheck * 100) : null;
-  let retention = null;
+  let retention = null, retLabel = '', retSub = '';
   if (STATE.view === '2026' || STATE.view === 'compare') {
     const returned = [...agg25.byClient.keys()].filter(k => agg26.byClient.has(k)).length;
     retention = agg25.byClient.size ? (returned / agg25.byClient.size * 100) : 0;
+    retLabel = '25→26'; retSub = returned + ' из ' + agg25.byClient.size;
+  } else if (STATE.view === '2025') {
+    const returned = [...agg24.byClient.keys()].filter(k => agg25.byClient.has(k)).length;
+    retention = agg24.byClient.size ? (returned / agg24.byClient.size * 100) : 0;
+    retLabel = '24→25'; retSub = returned + ' из ' + agg24.byClient.size;
   }
   const deltaHTML = (d) => {
     if (d === null) return '';
     const cls = d > 0.5 ? 'up' : (d < -0.5 ? 'down' : 'neutral');
     const sym = d > 0.5 ? '↑' : (d < -0.5 ? '↓' : '·');
-    return '<span class="kpi-delta ' + cls + '">' + sym + ' ' + (d>0?'+':'') + d.toFixed(1) + '% к 2025</span>';
+    const prevYear = STATE.view === '2026' ? '2025' : (STATE.view === '2025' ? '2024' : '');
+    return '<span class="kpi-delta ' + cls + '">' + sym + ' ' + (d>0?'+':'') + d.toFixed(1) + '% к ' + prevYear + '</span>';
   };
   document.getElementById('kpi-grid').innerHTML =
     '<div class="kpi accent"><div class="kpi-label">Выручка</div><div class="kpi-value">' + fmt(cur.totalRevenue, 0) + '</div><div class="kpi-sub">руб · ' + STATE.view + '</div>' + deltaHTML(deltaRev) + '</div>' +
     '<div class="kpi"><div class="kpi-label">Оплат</div><div class="kpi-value">' + cur.paymentCount + '</div><div class="kpi-sub">платежей принято</div>' + deltaHTML(deltaPay) + '</div>' +
     '<div class="kpi"><div class="kpi-label">Клиентов</div><div class="kpi-value">' + cur.clientCount + '</div><div class="kpi-sub">уникальных детей</div>' + deltaHTML(deltaCl) + '</div>' +
     '<div class="kpi"><div class="kpi-label">Средний чек</div><div class="kpi-value small">' + fmt(cur.avgCheck, 0) + '</div><div class="kpi-sub">руб за платёж · ' + fmt(cur.avgPerClient, 0) + ' р на клиента</div>' + deltaHTML(deltaCheck) + '</div>' +
-    '<div class="kpi"><div class="kpi-label">Удержание 25→26</div><div class="kpi-value small">' + (retention !== null ? retention.toFixed(0) + '%' : '—') + '</div><div class="kpi-sub">' + (retention !== null ? [...agg25.byClient.keys()].filter(k=>agg26.byClient.has(k)).length + ' из ' + agg25.byClient.size : '') + '</div></div>';
+    '<div class="kpi"><div class="kpi-label">Удержание ' + (retLabel || '—') + '</div><div class="kpi-value small">' + (retention !== null ? retention.toFixed(0) + '%' : '—') + '</div><div class="kpi-sub">' + retSub + '</div></div>';
 }
 
 let chartDyn = null;
-function renderDynamics(agg25, agg26) {
+function renderDynamics(agg24, agg25, agg26) {
   const byDate = (payments) => { const m = new Map(); payments.forEach(p => { const d = p.date.slice(5); m.set(d, (m.get(d) || 0) + p.amount); }); return m; };
-  const m25 = byDate(agg25.payments); const m26 = byDate(agg26.payments);
-  const allDates = [...new Set([...m25.keys(), ...m26.keys()])].sort();
-  const showBoth = STATE.view === 'compare';
+  const m24 = byDate(agg24.payments); const m25 = byDate(agg25.payments); const m26 = byDate(agg26.payments);
+  const allDates = [...new Set([...m24.keys(), ...m25.keys(), ...m26.keys()])].sort();
+  const showAll = STATE.view === 'compare';
   const datasets = [];
-  if (STATE.view === '2025' || showBoth) datasets.push({ label: '2025', data: allDates.map(d => m25.get(d) || 0), borderColor: '#0A0A0A', backgroundColor: 'rgba(10,10,10,0.06)', tension: 0.25, fill: showBoth, borderWidth: 2, pointRadius: 2, pointHoverRadius: 5 });
-  if (STATE.view === '2026' || showBoth) datasets.push({ label: '2026', data: allDates.map(d => m26.get(d) || 0), borderColor: '#FFD400', backgroundColor: 'rgba(255,212,0,0.18)', tension: 0.25, fill: true, borderWidth: 3, pointRadius: 2, pointHoverRadius: 5, pointBackgroundColor: '#0A0A0A', pointBorderColor: '#FFD400' });
+  if (STATE.view === '2024' || showAll) datasets.push({ label: '2024', data: allDates.map(d => m24.get(d) || 0), borderColor: '#B8B8B0', backgroundColor: 'rgba(184,184,176,0.18)', tension: 0.25, fill: showAll, borderWidth: 2, pointRadius: 2, pointHoverRadius: 5 });
+  if (STATE.view === '2025' || showAll) datasets.push({ label: '2025', data: allDates.map(d => m25.get(d) || 0), borderColor: '#0A0A0A', backgroundColor: 'rgba(10,10,10,0.06)', tension: 0.25, fill: showAll, borderWidth: 2, pointRadius: 2, pointHoverRadius: 5 });
+  if (STATE.view === '2026' || showAll) datasets.push({ label: '2026', data: allDates.map(d => m26.get(d) || 0), borderColor: '#FFD400', backgroundColor: 'rgba(255,212,0,0.18)', tension: 0.25, fill: true, borderWidth: 3, pointRadius: 2, pointHoverRadius: 5, pointBackgroundColor: '#0A0A0A', pointBorderColor: '#FFD400' });
   if (chartDyn) chartDyn.destroy();
   chartDyn = new Chart(document.getElementById('chart-dynamics'), {
     type: 'line',
     data: { labels: allDates.map(d => {const [m,dd] = d.split('-'); return dd+'.'+m;}), datasets },
     options: { responsive: true, maintainAspectRatio: false, interaction: { intersect: false, mode: 'index' },
-      plugins: { legend: { display: showBoth, position: 'top', align: 'end', labels: { font: { family: 'Manrope', weight: '600' } } },
+      plugins: { legend: { display: showAll, position: 'top', align: 'end', labels: { font: { family: 'Manrope', weight: '600' } } },
         tooltip: { backgroundColor: '#0A0A0A', titleFont: {family:'Manrope', weight:'600'}, bodyFont:{family:'JetBrains Mono'}, callbacks: { label: (c) => c.dataset.label + ': ' + fmt(c.parsed.y) + ' р' } } },
       scales: { x: { grid: { display: false }, ticks: { font: { family: 'JetBrains Mono', size: 10 }, color: '#6B6B6B', maxRotation: 0, autoSkip: true, maxTicksLimit: 14 } },
         y: { grid: { color: '#E8E7E0' }, ticks: { font: { family: 'JetBrains Mono', size: 11 }, color: '#6B6B6B', callback: (v) => fmt(v) + ' р' } } } }
   });
-  document.getElementById('dyn-meta').textContent = STATE.view === 'compare' ? '2025 + 2026' : STATE.view;
+  document.getElementById('dyn-meta').textContent = STATE.view === 'compare' ? '2024 + 2025 + 2026' : STATE.view;
 }
 
 function renderCash(agg25, agg26) {
@@ -623,7 +649,7 @@ function renderCourses(agg25, agg26) {
       const courseName = row.getAttribute('data-course').replace(/&quot;/g, '"');
       STATE.courseFilter = courseName;
       document.getElementById('course-select').value = courseName;
-      renderClients(aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
+      renderClients(aggregateByYear(STATE.data.payments, 2024), aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
       document.querySelector('table.clients').scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
@@ -655,8 +681,8 @@ function renderSegments(agg25, agg26) {
 }
 
 let CACHED_ROWS = [];
-function renderClients(agg25, agg26) {
-  CACHED_ROWS = buildClientsTable(agg25, agg26);
+function renderClients(agg24, agg25, agg26) {
+  CACHED_ROWS = buildClientsTable(agg24, agg25, agg26);
   const cntAll = CACHED_ROWS.length;
   document.getElementById('cnt-all').textContent = cntAll;
   document.getElementById('cnt-returning').textContent = CACHED_ROWS.filter(r => r.status === 'returning').length;
@@ -669,18 +695,20 @@ function renderClients(agg25, agg26) {
   filtered.sort((a,b) => { let av = a[k], bv = b[k]; if (typeof av === 'string') return av.localeCompare(bv) * d; return ((av || 0) - (bv || 0)) * d; });
   STATE.drawerList = filtered.map(r => r.key);
   document.getElementById('clients-count').innerHTML = 'показано <strong>' + filtered.length + '</strong> из ' + cntAll;
-  if (!filtered.length) { document.getElementById('clients-tbody').innerHTML = '<tr><td colspan="8" style="text-align:center;padding:60px;color:var(--gray-2)">Ничего не найдено</td></tr>'; return; }
+  if (!filtered.length) { document.getElementById('clients-tbody').innerHTML = '<tr><td colspan="9" style="text-align:center;padding:60px;color:var(--gray-2)">Ничего не найдено</td></tr>'; return; }
   document.getElementById('clients-tbody').innerHTML = filtered.map(r => {
     const tagClass = r.status === 'returning' ? 'returning' : (r.status === 'new' ? 'new' : 'lost');
     const tagText = r.status === 'returning' ? 'вернулся' : (r.status === 'new' ? 'новый' : 'не вернулся');
     const cashType = r.cash.replace('mixed-','');
     const cashLabel = r.cash.startsWith('mixed-') ? CASH_LABELS[cashType] + '+' : CASH_LABELS[cashType];
     const deltaClass = r.delta > 0.5 ? 'delta-up' : (r.delta < -0.5 ? 'delta-down' : 'dim');
+    const a24Str = r.amount24 ? fmt(r.amount24, 0) : '—';
     const a25Str = r.amount25 ? fmt(r.amount25, 0) : '—';
     const a26Str = r.amount26 ? fmt(r.amount26, 0) : '—';
     const deltaStr = (!r.amount25 || !r.amount26) ? '—' : (r.delta > 0.5 ? '+' : '') + fmt(r.delta, 0);
     return '<tr data-key="' + r.key + '">' +
       '<td>' + r.client + '</td>' +
+      '<td class="num' + (r.amount24 ? '' : ' dim') + '">' + a24Str + '</td>' +
       '<td class="num' + (r.amount25 ? '' : ' dim') + '">' + a25Str + '</td>' +
       '<td class="num' + (r.amount26 ? '' : ' dim') + '">' + a26Str + '</td>' +
       '<td class="num ' + (r.amount25 && r.amount26 ? deltaClass : 'dim') + '">' + deltaStr + '</td>' +
@@ -714,14 +742,17 @@ function openDrawer(key) {
   // stats
   const totalAll = row.amount25 + row.amount26;
   const deltaPct = row.amount25 ? ((row.amount26 - row.amount25) / row.amount25 * 100) : null;
+  const total3 = (row.amount24 || 0) + row.amount25 + row.amount26;
+  const totalPays = (row.payments24 || 0) + row.payments25 + row.payments26;
   document.getElementById('drawer-stats').innerHTML =
-    '<div class="drawer-stat accent"><div class="lbl">Всего за два года</div><div class="val">' + fmt(totalAll, 0) + '</div><div class="ext">руб · ' + (row.payments25 + row.payments26) + ' оплат</div></div>' +
+    '<div class="drawer-stat accent"><div class="lbl">Всего за три года</div><div class="val">' + fmt(total3, 0) + '</div><div class="ext">руб · ' + totalPays + ' оплат</div></div>' +
     '<div class="drawer-stat"><div class="lbl">Динамика 25→26</div><div class="val">' + (deltaPct !== null ? (deltaPct>0?'+':'') + deltaPct.toFixed(0) + '%' : '—') + '</div><div class="ext">' + (row.delta>0?'+':'') + fmt(row.delta, 0) + ' руб</div></div>' +
+    '<div class="drawer-stat"><div class="lbl">2024</div><div class="val">' + fmt(row.amount24 || 0, 0) + '</div><div class="ext">' + (row.payments24 || 0) + ' оплат</div></div>' +
     '<div class="drawer-stat"><div class="lbl">2025</div><div class="val">' + fmt(row.amount25, 0) + '</div><div class="ext">' + row.payments25 + ' оплат</div></div>' +
     '<div class="drawer-stat"><div class="lbl">2026</div><div class="val">' + fmt(row.amount26, 0) + '</div><div class="ext">' + row.payments26 + ' оплат</div></div>';
   // история
   const renderYear = (yr, c) => {
-    if (!c) return '<div class="year-block empty"><div class="year-block-head">' + yr + ' <span class="total">— нет оплат</span></div><div class="empty-msg">' + (yr === 2025 ? 'Не покупал майский в 2025' : 'Не вернулся в 2026') + '</div></div>';
+    if (!c) return '<div class="year-block empty"><div class="year-block-head">' + yr + ' <span class="total">— нет оплат</span></div><div class="empty-msg">' + ('Не покупал майский в ' + yr) + '</div></div>';
     const sorted = [...c.payments].sort((a,b) => a.date.localeCompare(b.date));
     return '<div class="year-block"><div class="year-block-head">' + yr + ' <span class="total">' + fmt(c.totalAmount, 0) + ' руб · ' + c.payments.length + ' опл</span></div>' +
       sorted.map(p => '<div class="payment-row">' +
@@ -731,7 +762,7 @@ function openDrawer(key) {
         '<div class="amount">' + fmt(p.amount, 0) + ' р</div>' +
       '</div>').join('') + '</div>';
   };
-  document.getElementById('drawer-history').innerHTML = renderYear(2025, row._c25) + renderYear(2026, row._c26);
+  document.getElementById('drawer-history').innerHTML = renderYear(2024, row._c24) + renderYear(2025, row._c25) + renderYear(2026, row._c26);
   // nav
   const idx = STATE.drawerList.indexOf(key);
   document.getElementById('drawer-prev').disabled = idx <= 0;
@@ -747,19 +778,26 @@ function closeDrawer() {
   STATE.drawerKey = null;
 }
 
+function getAggs() {
+  return {
+    24: aggregateByYear(STATE.data.payments, 2024),
+    25: aggregateByYear(STATE.data.payments, 2025),
+    26: aggregateByYear(STATE.data.payments, 2026)
+  };
+}
 function render() {
-  const agg25 = aggregateByYear(STATE.data.payments, 2025);
-  const agg26 = aggregateByYear(STATE.data.payments, 2026);
+  const aggs = getAggs();
+  const agg24 = aggs[24], agg25 = aggs[25], agg26 = aggs[26];
   const sub = document.getElementById('period-subtitle');
-  sub.textContent = STATE.view === 'compare' ? 'Сравнение 2025 и 2026' : 'Майские абонементы ' + STATE.view + ' года';
+  sub.textContent = STATE.view === 'compare' ? 'Сравнение 2024, 2025 и 2026' : 'Майские абонементы ' + STATE.view + ' года';
   document.getElementById('data-info').textContent = STATE.data.payments.length + ' платежей · обновлено ' + STATE.data.meta.generated_at;
-  renderKPI(agg25, agg26);
-  renderDynamics(agg25, agg26);
+  renderKPI(agg24, agg25, agg26);
+  renderDynamics(agg24, agg25, agg26);
   renderCash(agg25, agg26);
   renderCohorts(agg25, agg26);
   renderCourses(agg25, agg26);
   renderSegments(agg25, agg26);
-  renderClients(agg25, agg26);
+  renderClients(agg24, agg25, agg26);
 }
 
 document.querySelectorAll('.year-tab').forEach(btn => {
@@ -772,17 +810,17 @@ document.querySelectorAll('#status-filters .filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('#status-filters .filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active'); STATE.statusFilter = btn.dataset.status;
-    renderClients(aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
+    renderClients(aggregateByYear(STATE.data.payments, 2024), aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
   });
 });
 document.getElementById('search').addEventListener('input', (e) => {
   STATE.search = e.target.value.trim();
-  renderClients(aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
+  renderClients(aggregateByYear(STATE.data.payments, 2024), aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
 });
 
 document.getElementById('course-select').addEventListener('change', (e) => {
   STATE.courseFilter = e.target.value;
-  renderClients(aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
+  renderClients(aggregateByYear(STATE.data.payments, 2024), aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
 });
 
 function populateCourseSelect() {
@@ -802,7 +840,7 @@ document.querySelectorAll('table.clients th').forEach(th => {
     const k = th.dataset.sort;
     if (STATE.sortKey === k) STATE.sortDir = STATE.sortDir === 'desc' ? 'asc' : 'desc';
     else { STATE.sortKey = k; STATE.sortDir = 'desc'; }
-    renderClients(aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
+    renderClients(aggregateByYear(STATE.data.payments, 2024), aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
   });
 });
 
@@ -890,12 +928,13 @@ document.getElementById('btn-load-api').addEventListener('click', async () => {
 });
 
 document.getElementById('btn-export').addEventListener('click', () => {
+  const agg24 = aggregateByYear(STATE.data.payments, 2024);
   const agg25 = aggregateByYear(STATE.data.payments, 2025);
   const agg26 = aggregateByYear(STATE.data.payments, 2026);
-  const rows = buildClientsTable(agg25, agg26);
+  const rows = buildClientsTable(agg24, agg25, agg26);
   const csv = [
-    'Клиент,Сумма 2025,Сумма 2026,Δ,Оплат 25,Оплат 26,Касса,Первое появление,Статус',
-    ...rows.map(r => ['"' + r.client.replace(/"/g,'""') + '"', r.amount25, r.amount26, r.delta, r.payments25, r.payments26, CASH_LABELS[r.cash.replace('mixed-','')] || '', r.firstSeen || '', r.status].join(','))
+    'Клиент,Сумма 2024,Сумма 2025,Сумма 2026,Δ,Оплат 24,Оплат 25,Оплат 26,Касса,Первое появление,Статус',
+    ...rows.map(r => ['"' + r.client.replace(/"/g,'""') + '"', r.amount24, r.amount25, r.amount26, r.delta, r.payments24, r.payments25, r.payments26, CASH_LABELS[r.cash.replace('mixed-','')] || '', r.firstSeen || '', r.status].join(','))
   ].join('\n');
   const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
   const url = URL.createObjectURL(blob);
