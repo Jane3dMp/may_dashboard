@@ -203,6 +203,7 @@ footer.bottom code { background: var(--paper-2); padding: 2px 6px; font-family: 
       <div class="subtitle" id="period-subtitle">Анализ продаж · сравнение 2025 и 2026</div>
     </div>
     <div class="controls">
+      <button class="year-tab" data-view="2022">2022</button>
       <button class="year-tab" data-view="2023">2023</button>
       <button class="year-tab" data-view="2024">2024</button>
       <button class="year-tab" data-view="2025">2025</button>
@@ -298,8 +299,10 @@ footer.bottom code { background: var(--paper-2); padding: 2px 6px; font-family: 
         <thead>
           <tr>
             <th data-sort="client">Клиент <span class="arr"></span></th>
+            <th data-sort="amount22" style="text-align:right">2022 <span class="arr"></span></th>
             <th data-sort="amount23" style="text-align:right">2023 <span class="arr"></span></th>
             <th data-sort="amount24" style="text-align:right">2024 <span class="arr"></span></th>
+            <th data-sort="amount22" style="text-align:right">2022 <span class="arr"></span></th>
             <th data-sort="amount23" style="text-align:right">2023 <span class="arr"></span></th>
             <th data-sort="amount24" style="text-align:right">2024 <span class="arr"></span></th>
             <th data-sort="amount25" style="text-align:right">2025 <span class="arr"></span></th>
@@ -432,16 +435,17 @@ function clientStatus(key, agg25, agg26) {
   return 'unknown';
 }
 
-function buildClientsTable(agg23, agg24, agg25, agg26) {
-  const all = new Set([...agg23.byClient.keys(), ...agg24.byClient.keys(), ...agg25.byClient.keys(), ...agg26.byClient.keys()]);
+function buildClientsTable(agg22, agg23, agg24, agg25, agg26) {
+  const all = new Set([...agg22.byClient.keys(), ...agg23.byClient.keys(), ...agg24.byClient.keys(), ...agg25.byClient.keys(), ...agg26.byClient.keys()]);
   const rows = [];
   const courseFilter = STATE.courseFilter;
   all.forEach(key => {
+    const c22 = agg22.byClient.get(key);
     const c23 = agg23.byClient.get(key);
     const c24 = agg24.byClient.get(key);
     const c25 = agg25.byClient.get(key);
     const c26 = agg26.byClient.get(key);
-    const useC = c26 || c25 || c24 || c23;
+    const useC = c26 || c25 || c24 || c23 || c22;
     // если фильтр по курсу — оставляем только платежи этого курса
     const filterPays = (c) => {
       if (!c) return null;
@@ -450,11 +454,12 @@ function buildClientsTable(agg23, agg24, agg25, agg26) {
       if (!filtered.length) return null;
       return { ...c, payments: filtered, totalAmount: filtered.reduce((s,p) => s + p.amount, 0) };
     };
+    const fc22 = filterPays(c22);
     const fc23 = filterPays(c23);
     const fc24 = filterPays(c24);
     const fc25 = filterPays(c25);
     const fc26 = filterPays(c26);
-    if (courseFilter && !fc23 && !fc24 && !fc25 && !fc26) return;
+    if (courseFilter && !fc22 && !fc23 && !fc24 && !fc25 && !fc26) return;
     // статус: считаем относительно текущего "анкора" (по умолчанию 2026)
     let status;
     if (courseFilter) {
@@ -472,7 +477,7 @@ function buildClientsTable(agg23, agg24, agg25, agg26) {
       else if (in25 || in24) status = 'lost';
       else status = 'unknown';
     }
-    const refC = fc26 || fc25 || fc24 || fc23 || useC;
+    const refC = fc26 || fc25 || fc24 || fc23 || fc22 || useC;
     const dates24 = fc24 ? fc24.payments.map(p => p.date) : [];
     const dates25 = fc25 ? fc25.payments.map(p => p.date) : [];
     const dates26 = fc26 ? fc26.payments.map(p => p.date) : [];
@@ -486,25 +491,27 @@ function buildClientsTable(agg23, agg24, agg25, agg26) {
     else { const max = Math.max(...Object.values(cashCount)); cash = cashTypes.find(t => cashCount[t] === max); if (cashTypes.length > 1) cash = 'mixed-' + cash; }
     rows.push({
       key, client: [...useC.originalNames].sort((a,b)=>b.length-a.length)[0],
+      amount22: fc22 ? fc22.totalAmount : 0,
       amount23: fc23 ? fc23.totalAmount : 0,
       amount24: fc24 ? fc24.totalAmount : 0,
       amount25: fc25 ? fc25.totalAmount : 0,
       amount26: fc26 ? fc26.totalAmount : 0,
       delta: (fc26 ? fc26.totalAmount : 0) - (fc25 ? fc25.totalAmount : 0),
+      payments22: fc22 ? fc22.payments.length : 0,
       payments23: fc23 ? fc23.payments.length : 0,
       payments24: fc24 ? fc24.payments.length : 0,
       payments25: fc25 ? fc25.payments.length : 0,
       payments26: fc26 ? fc26.payments.length : 0,
       status, firstSeen, cash, cashCount,
-      _c23: fc23 || c23, _c24: fc24 || c24, _c25: fc25 || c25, _c26: fc26 || c26
+      _c22: fc22 || c22, _c23: fc23 || c23, _c24: fc24 || c24, _c25: fc25 || c25, _c26: fc26 || c26
     });
   });
   return rows;
 }
 
-function renderKPI(agg23, agg24, agg25, agg26) {
-  const aggMap = { '2023': agg23, '2024': agg24, '2025': agg25, '2026': agg26 };
-  const prevMap = { '2023': null, '2024': agg23, '2025': agg24, '2026': agg25 };
+function renderKPI(agg22, agg23, agg24, agg25, agg26) {
+  const aggMap = { '2022': agg22, '2023': agg23, '2024': agg24, '2025': agg25, '2026': agg26 };
+  const prevMap = { '2022': null, '2023': agg22, '2024': agg23, '2025': agg24, '2026': agg25 };
   const cur = aggMap[STATE.view] || agg26;
   const prev = prevMap[STATE.view] !== undefined ? prevMap[STATE.view] : agg25;
   const deltaRev = prev ? ((cur.totalRevenue - prev.totalRevenue) / prev.totalRevenue * 100) : null;
@@ -524,12 +531,16 @@ function renderKPI(agg23, agg24, agg25, agg26) {
     const returned = [...agg23.byClient.keys()].filter(k => agg24.byClient.has(k)).length;
     retention = agg23.byClient.size ? (returned / agg23.byClient.size * 100) : 0;
     retLabel = '23→24'; retSub = returned + ' из ' + agg23.byClient.size;
+  } else if (STATE.view === '2023') {
+    const returned = [...agg22.byClient.keys()].filter(k => agg23.byClient.has(k)).length;
+    retention = agg22.byClient.size ? (returned / agg22.byClient.size * 100) : 0;
+    retLabel = '22→23'; retSub = returned + ' из ' + agg22.byClient.size;
   }
   const deltaHTML = (d) => {
     if (d === null) return '';
     const cls = d > 0.5 ? 'up' : (d < -0.5 ? 'down' : 'neutral');
     const sym = d > 0.5 ? '↑' : (d < -0.5 ? '↓' : '·');
-    const prevYear = STATE.view === '2026' ? '2025' : (STATE.view === '2025' ? '2024' : (STATE.view === '2024' ? '2023' : ''));
+    const prevYear = STATE.view === '2026' ? '2025' : (STATE.view === '2025' ? '2024' : (STATE.view === '2024' ? '2023' : (STATE.view === '2023' ? '2022' : '')));
     return '<span class="kpi-delta ' + cls + '">' + sym + ' ' + (d>0?'+':'') + d.toFixed(1) + '% к ' + prevYear + '</span>';
   };
   document.getElementById('kpi-grid').innerHTML =
@@ -541,12 +552,13 @@ function renderKPI(agg23, agg24, agg25, agg26) {
 }
 
 let chartDyn = null;
-function renderDynamics(agg23, agg24, agg25, agg26) {
+function renderDynamics(agg22, agg23, agg24, agg25, agg26) {
   const byDate = (payments) => { const m = new Map(); payments.forEach(p => { const d = p.date.slice(5); m.set(d, (m.get(d) || 0) + p.amount); }); return m; };
-  const m23 = byDate(agg23.payments); const m24 = byDate(agg24.payments); const m25 = byDate(agg25.payments); const m26 = byDate(agg26.payments);
-  const allDates = [...new Set([...m23.keys(), ...m24.keys(), ...m25.keys(), ...m26.keys()])].sort();
+  const m22 = byDate(agg22.payments); const m23 = byDate(agg23.payments); const m24 = byDate(agg24.payments); const m25 = byDate(agg25.payments); const m26 = byDate(agg26.payments);
+  const allDates = [...new Set([...m22.keys(), ...m23.keys(), ...m24.keys(), ...m25.keys(), ...m26.keys()])].sort();
   const showAll = STATE.view === 'compare';
   const datasets = [];
+  if (STATE.view === '2022' || showAll) datasets.push({ label: '2022', data: allDates.map(d => m22.get(d) || 0), borderColor: '#E8E7E0', backgroundColor: 'rgba(232,231,224,0.10)', tension: 0.25, fill: showAll, borderWidth: 2, pointRadius: 2, pointHoverRadius: 5, borderDash: showAll ? [1,4] : [] });
   if (STATE.view === '2023' || showAll) datasets.push({ label: '2023', data: allDates.map(d => m23.get(d) || 0), borderColor: '#D8D7CF', backgroundColor: 'rgba(216,215,207,0.12)', tension: 0.25, fill: showAll, borderWidth: 2, pointRadius: 2, pointHoverRadius: 5, borderDash: showAll ? [2,3] : [] });
   if (STATE.view === '2024' || showAll) datasets.push({ label: '2024', data: allDates.map(d => m24.get(d) || 0), borderColor: '#B8B8B0', backgroundColor: 'rgba(184,184,176,0.18)', tension: 0.25, fill: showAll, borderWidth: 2, pointRadius: 2, pointHoverRadius: 5 });
   if (STATE.view === '2025' || showAll) datasets.push({ label: '2025', data: allDates.map(d => m25.get(d) || 0), borderColor: '#0A0A0A', backgroundColor: 'rgba(10,10,10,0.06)', tension: 0.25, fill: showAll, borderWidth: 2, pointRadius: 2, pointHoverRadius: 5 });
@@ -561,7 +573,7 @@ function renderDynamics(agg23, agg24, agg25, agg26) {
       scales: { x: { grid: { display: false }, ticks: { font: { family: 'JetBrains Mono', size: 10 }, color: '#6B6B6B', maxRotation: 0, autoSkip: true, maxTicksLimit: 14 } },
         y: { grid: { color: '#E8E7E0' }, ticks: { font: { family: 'JetBrains Mono', size: 11 }, color: '#6B6B6B', callback: (v) => fmt(v) + ' р' } } } }
   });
-  document.getElementById('dyn-meta').textContent = STATE.view === 'compare' ? '2023 + 2024 + 2025 + 2026' : STATE.view;
+  document.getElementById('dyn-meta').textContent = STATE.view === 'compare' ? '2022 + 2023 + 2024 + 2025 + 2026' : STATE.view;
 }
 
 function renderCash(agg25, agg26) {
@@ -660,7 +672,7 @@ function renderCourses(agg25, agg26) {
       const courseName = row.getAttribute('data-course').replace(/&quot;/g, '"');
       STATE.courseFilter = courseName;
       document.getElementById('course-select').value = courseName;
-      renderClients(aggregateByYear(STATE.data.payments, 2023), aggregateByYear(STATE.data.payments, 2024), aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
+      renderClients(aggregateByYear(STATE.data.payments, 2022), aggregateByYear(STATE.data.payments, 2023), aggregateByYear(STATE.data.payments, 2024), aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
       document.querySelector('table.clients').scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
@@ -692,8 +704,8 @@ function renderSegments(agg25, agg26) {
 }
 
 let CACHED_ROWS = [];
-function renderClients(agg23, agg24, agg25, agg26) {
-  CACHED_ROWS = buildClientsTable(agg23, agg24, agg25, agg26);
+function renderClients(agg22, agg23, agg24, agg25, agg26) {
+  CACHED_ROWS = buildClientsTable(agg22, agg23, agg24, agg25, agg26);
   const cntAll = CACHED_ROWS.length;
   document.getElementById('cnt-all').textContent = cntAll;
   document.getElementById('cnt-returning').textContent = CACHED_ROWS.filter(r => r.status === 'returning').length;
@@ -706,7 +718,7 @@ function renderClients(agg23, agg24, agg25, agg26) {
   filtered.sort((a,b) => { let av = a[k], bv = b[k]; if (typeof av === 'string') return av.localeCompare(bv) * d; return ((av || 0) - (bv || 0)) * d; });
   STATE.drawerList = filtered.map(r => r.key);
   document.getElementById('clients-count').innerHTML = 'показано <strong>' + filtered.length + '</strong> из ' + cntAll;
-  if (!filtered.length) { document.getElementById('clients-tbody').innerHTML = '<tr><td colspan="10" style="text-align:center;padding:60px;color:var(--gray-2)">Ничего не найдено</td></tr>'; return; }
+  if (!filtered.length) { document.getElementById('clients-tbody').innerHTML = '<tr><td colspan="11" style="text-align:center;padding:60px;color:var(--gray-2)">Ничего не найдено</td></tr>'; return; }
   document.getElementById('clients-tbody').innerHTML = filtered.map(r => {
     const tagClass = r.status === 'returning' ? 'returning' : (r.status === 'new' ? 'new' : 'lost');
     const tagText = r.status === 'returning' ? 'вернулся' : (r.status === 'new' ? 'новый' : 'не вернулся');
@@ -753,11 +765,12 @@ function openDrawer(key) {
   // stats
   const totalAll = row.amount25 + row.amount26;
   const deltaPct = row.amount25 ? ((row.amount26 - row.amount25) / row.amount25 * 100) : null;
-  const totalAllYears = (row.amount23 || 0) + (row.amount24 || 0) + row.amount25 + row.amount26;
-  const totalPays = (row.payments23 || 0) + (row.payments24 || 0) + row.payments25 + row.payments26;
+  const totalAllYears = (row.amount22 || 0) + (row.amount23 || 0) + (row.amount24 || 0) + row.amount25 + row.amount26;
+  const totalPays = (row.payments22 || 0) + (row.payments23 || 0) + (row.payments24 || 0) + row.payments25 + row.payments26;
   document.getElementById('drawer-stats').innerHTML =
-    '<div class="drawer-stat accent"><div class="lbl">Всего за 4 года</div><div class="val">' + fmt(totalAllYears, 0) + '</div><div class="ext">руб · ' + totalPays + ' оплат</div></div>' +
+    '<div class="drawer-stat accent"><div class="lbl">Всего за 5 лет</div><div class="val">' + fmt(totalAllYears, 0) + '</div><div class="ext">руб · ' + totalPays + ' оплат</div></div>' +
     '<div class="drawer-stat"><div class="lbl">Динамика 25→26</div><div class="val">' + (deltaPct !== null ? (deltaPct>0?'+':'') + deltaPct.toFixed(0) + '%' : '—') + '</div><div class="ext">' + (row.delta>0?'+':'') + fmt(row.delta, 0) + ' руб</div></div>' +
+    '<div class="drawer-stat"><div class="lbl">2022</div><div class="val">' + fmt(row.amount22 || 0, 0) + '</div><div class="ext">' + (row.payments22 || 0) + ' оплат</div></div>' +
     '<div class="drawer-stat"><div class="lbl">2023</div><div class="val">' + fmt(row.amount23 || 0, 0) + '</div><div class="ext">' + (row.payments23 || 0) + ' оплат</div></div>' +
     '<div class="drawer-stat"><div class="lbl">2024</div><div class="val">' + fmt(row.amount24 || 0, 0) + '</div><div class="ext">' + (row.payments24 || 0) + ' оплат</div></div>' +
     '<div class="drawer-stat"><div class="lbl">2025</div><div class="val">' + fmt(row.amount25, 0) + '</div><div class="ext">' + row.payments25 + ' оплат</div></div>' +
@@ -774,7 +787,7 @@ function openDrawer(key) {
         '<div class="amount">' + fmt(p.amount, 0) + ' р</div>' +
       '</div>').join('') + '</div>';
   };
-  document.getElementById('drawer-history').innerHTML = renderYear(2023, row._c23) + renderYear(2024, row._c24) + renderYear(2025, row._c25) + renderYear(2026, row._c26);
+  document.getElementById('drawer-history').innerHTML = renderYear(2022, row._c22) + renderYear(2023, row._c23) + renderYear(2024, row._c24) + renderYear(2025, row._c25) + renderYear(2026, row._c26);
   // nav
   const idx = STATE.drawerList.indexOf(key);
   document.getElementById('drawer-prev').disabled = idx <= 0;
@@ -803,13 +816,13 @@ function render() {
   const sub = document.getElementById('period-subtitle');
   sub.textContent = STATE.view === 'compare' ? 'Сравнение 2024, 2025 и 2026' : 'Майские абонементы ' + STATE.view + ' года';
   document.getElementById('data-info').textContent = STATE.data.payments.length + ' платежей · обновлено ' + STATE.data.meta.generated_at;
-  renderKPI(agg23, agg24, agg25, agg26);
-  renderDynamics(agg23, agg24, agg25, agg26);
+  renderKPI(agg22, agg23, agg24, agg25, agg26);
+  renderDynamics(agg22, agg23, agg24, agg25, agg26);
   renderCash(agg25, agg26);
   renderCohorts(agg25, agg26);
   renderCourses(agg25, agg26);
   renderSegments(agg25, agg26);
-  renderClients(agg23, agg24, agg25, agg26);
+  renderClients(agg22, agg23, agg24, agg25, agg26);
 }
 
 document.querySelectorAll('.year-tab').forEach(btn => {
@@ -822,17 +835,17 @@ document.querySelectorAll('#status-filters .filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('#status-filters .filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active'); STATE.statusFilter = btn.dataset.status;
-    renderClients(aggregateByYear(STATE.data.payments, 2023), aggregateByYear(STATE.data.payments, 2024), aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
+    renderClients(aggregateByYear(STATE.data.payments, 2022), aggregateByYear(STATE.data.payments, 2023), aggregateByYear(STATE.data.payments, 2024), aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
   });
 });
 document.getElementById('search').addEventListener('input', (e) => {
   STATE.search = e.target.value.trim();
-  renderClients(aggregateByYear(STATE.data.payments, 2023), aggregateByYear(STATE.data.payments, 2024), aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
+  renderClients(aggregateByYear(STATE.data.payments, 2022), aggregateByYear(STATE.data.payments, 2023), aggregateByYear(STATE.data.payments, 2024), aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
 });
 
 document.getElementById('course-select').addEventListener('change', (e) => {
   STATE.courseFilter = e.target.value;
-  renderClients(aggregateByYear(STATE.data.payments, 2023), aggregateByYear(STATE.data.payments, 2024), aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
+  renderClients(aggregateByYear(STATE.data.payments, 2022), aggregateByYear(STATE.data.payments, 2023), aggregateByYear(STATE.data.payments, 2024), aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
 });
 
 function populateCourseSelect() {
@@ -852,7 +865,7 @@ document.querySelectorAll('table.clients th').forEach(th => {
     const k = th.dataset.sort;
     if (STATE.sortKey === k) STATE.sortDir = STATE.sortDir === 'desc' ? 'asc' : 'desc';
     else { STATE.sortKey = k; STATE.sortDir = 'desc'; }
-    renderClients(aggregateByYear(STATE.data.payments, 2023), aggregateByYear(STATE.data.payments, 2024), aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
+    renderClients(aggregateByYear(STATE.data.payments, 2022), aggregateByYear(STATE.data.payments, 2023), aggregateByYear(STATE.data.payments, 2024), aggregateByYear(STATE.data.payments, 2025), aggregateByYear(STATE.data.payments, 2026));
   });
 });
 
@@ -945,8 +958,8 @@ document.getElementById('btn-export').addEventListener('click', () => {
   const agg26 = aggregateByYear(STATE.data.payments, 2026);
   const rows = buildClientsTable(agg24, agg25, agg26);
   const csv = [
-    'Клиент,Сумма 2023,Сумма 2024,Сумма 2025,Сумма 2026,Δ,Оплат 23,Оплат 24,Оплат 25,Оплат 26,Касса,Первое появление,Статус',
-    ...rows.map(r => ['"' + r.client.replace(/"/g,'""') + '"', r.amount23 || 0, r.amount24 || 0, r.amount25, r.amount26, r.delta, r.payments23 || 0, r.payments24 || 0, r.payments25, r.payments26, CASH_LABELS[r.cash.replace('mixed-','')] || '', r.firstSeen || '', r.status].join(','))
+    'Клиент,Сумма 2022,Сумма 2023,Сумма 2024,Сумма 2025,Сумма 2026,Δ,Оплат 22,Оплат 23,Оплат 24,Оплат 25,Оплат 26,Касса,Первое появление,Статус',
+    ...rows.map(r => ['"' + r.client.replace(/"/g,'""') + '"', r.amount22 || 0, r.amount23 || 0, r.amount24 || 0, r.amount25, r.amount26, r.delta, r.payments22 || 0, r.payments23 || 0, r.payments24 || 0, r.payments25, r.payments26, CASH_LABELS[r.cash.replace('mixed-','')] || '', r.firstSeen || '', r.status].join(','))
   ].join('\n');
   const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
   const url = URL.createObjectURL(blob);
